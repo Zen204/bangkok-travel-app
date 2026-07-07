@@ -1,0 +1,1966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BKK Trip HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  #mediaList{ margin-top: 20px; }
+
+  :root{
+    --ink:#20201c;
+    --paper:#f6efdf;
+    --paper-2:#efe4cd;
+    --card:#fdfaf2;
+    --indigo:#1d2a44;
+    --indigo-2:#293a5c;
+    --marigold:#e3a23b;
+    --marigold-dark:#c07f22;
+    --jade:#2f6f5e;
+    --lacquer:#a33b3b;
+    --line: rgba(32,32,28,0.16);
+    --shadow: 0 10px 30px rgba(29,42,68,0.18);
+  }
+.mathable-input{
+  font-family:'IBM Plex Mono'; font-size:14.5px; letter-spacing:0.01em;
+}
+.mathable-hint{
+  font-family:'IBM Plex Mono'; font-size:10.5px; color:rgba(32,32,28,0.45);
+  margin-top:4px;
+}
+
+.weather-panel{max-width:480px; margin-left:auto; margin-right:auto;}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;}
+  ::selection{background:var(--marigold); color:var(--indigo);}
+  .display{font-family:'Big Shoulders Display',sans-serif; font-weight:800; text-transform:uppercase; letter-spacing:0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  button{font-family:inherit; cursor:pointer;}
+  input, textarea, select{font-family:inherit; color:var(--ink);}
+
+  /* ===== TOP NAV ===== */
+  .navbar{
+    position:sticky; top:0; z-index:50;
+    background:var(--indigo); color:#fdfaf2;
+    display:flex; align-items:center; gap:4px;
+    padding:10px 14px; overflow-x:auto;
+    box-shadow:0 4px 16px rgba(0,0,0,0.15);
+  }
+  .navbar .brand{
+    font-family:'Big Shoulders Display'; font-weight:800; font-size:18px; letter-spacing:0.03em;
+    color:var(--marigold); margin-right:14px; white-space:nowrap; flex:0 0 auto;
+  }
+  .navbtn{
+    background:none; border:none; color:rgba(253,250,242,0.65);
+    font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    padding:9px 13px; border-radius:8px; white-space:nowrap; transition:all .15s; flex:0 0 auto;
+  }
+  .navbtn:hover{color:#fdfaf2; background:rgba(255,255,255,0.06);}
+  .navbtn.active{color:var(--indigo); background:var(--marigold); font-weight:600;}
+  .nav-clock{
+    margin-left:auto; font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--marigold);
+    white-space:nowrap; padding:6px 10px 6px 14px; flex:0 0 auto; cursor:default;
+    opacity:0.75; border:1px dashed rgba(227,162,59,0.4); border-radius:8px; background:rgba(255,255,255,0.03);
+  }
+  .nav-clock .dotlbl{font-size:9px; letter-spacing:0.08em; color:rgba(253,250,242,0.4); margin-right:6px; text-transform:uppercase;}
+
+  .page{display:none; animation:fadein .25s ease;}
+  .page.active{display:block;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:30px 20px 70px;}
+  .sync-note{
+    max-width:1080px; margin:14px auto 0; padding:0 20px;
+    font-family:'IBM Plex Mono'; font-size:11px; color:rgba(32,32,28,0.45); text-align:center;
+  }
+  .sync-note .live-dot{display:inline-block; width:6px;height:6px;border-radius:50%; background:var(--jade); margin-right:6px;}
+
+  h1.pagehead{font-family:'Big Shoulders Display'; font-weight:800; font-size:clamp(30px,4.5vw,46px); color:var(--indigo); margin:0 0 6px;}
+  p.pagesub{color:rgba(32,32,28,0.65); font-size:14.5px; margin:0 0 26px; max-width:65ch;}
+
+  .panel{background:var(--card); border-radius:18px; box-shadow:var(--shadow); padding:26px 28px; margin-bottom:22px;}
+  .panel h3{font-family:'Big Shoulders Display'; font-weight:800; font-size:22px; color:var(--indigo); margin:0 0 16px; text-transform:uppercase;}
+
+  /* ===== HOME ===== */
+  .hero-wrap{
+    background:
+      radial-gradient(1200px 500px at 15% -10%, rgba(227,162,59,0.18), transparent 60%),
+      linear-gradient(180deg, var(--indigo) 0%, var(--indigo-2) 100%);
+    padding:60px 20px 80px; position:relative; overflow:hidden;
+  }
+  .hero-wrap:before{
+    content:""; position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 14px 14px; opacity:0.5;
+  }
+  .hero-inner{max-width:820px; margin:0 auto; position:relative; z-index:2; text-align:center;}
+  .plane-emoji{font-size:34px; margin-bottom:10px; display:inline-block;}
+  .hero-eyebrow{
+    color:var(--marigold); font-family:'IBM Plex Mono'; font-size:12.5px; letter-spacing:0.18em;
+    text-transform:uppercase; margin-bottom:14px;
+  }
+  .hero-title{
+    font-family:'Big Shoulders Display'; font-weight:800; font-size:clamp(34px,7vw,64px);
+    color:#fdfaf2; line-height:0.95; margin:0 0 10px;
+  }
+  .hero-title span{color:var(--marigold);}
+  .hero-sub{color:rgba(253,250,242,0.7); font-size:15px; margin-bottom:34px;}
+
+  .countdown{
+    display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:10px;
+  }
+  .cd-box{
+    background:rgba(253,250,242,0.08); border:1px solid rgba(253,250,242,0.18);
+    border-radius:14px; padding:16px 18px; min-width:88px;
+  }
+  .cd-num{font-family:'IBM Plex Mono'; font-weight:600; font-size:clamp(28px,5vw,42px); color:var(--marigold);}
+  .cd-label{font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:rgba(253,250,242,0.55); margin-top:4px;}
+  .cd-target{font-family:'IBM Plex Mono'; font-size:11.5px; color:rgba(253,250,242,0.45); margin-top:20px;}
+
+  .home-grid{max-width:1080px; margin:-40px auto 0; padding:0 20px 20px; position:relative; z-index:3;
+    display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media(max-width:760px){.home-grid{grid-template-columns:1fr;}}
+
+  .clock-block{min-width:130px;}
+  .clock-block .clock-lbl{font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(32,32,28,0.5); margin-bottom:4px;}
+  .clock-block .clock-val{font-family:'Big Shoulders Display'; font-weight:800; font-size:30px;}
+
+  .split-mode-row{display:flex; gap:8px; margin-bottom:14px;}
+.split-mode-btn{
+  font-family:'IBM Plex Mono'; font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase;
+  padding:8px 14px; border-radius:8px; border:1.5px solid var(--indigo); background:transparent; color:var(--indigo);
+}
+.split-mode-btn.on{background:var(--indigo); color:#fdfaf2;}
+
+  /* for weather forecast
+  */
+.weather-grid{display:flex; gap:16px; align-items:center; flex-wrap:nowrap;}
+.weather-now{flex:0 0 auto;}
+.weather-icon{font-size:40px;}
+.weather-temp{font-family:'Big Shoulders Display'; font-weight:800; font-size:34px; color:var(--indigo);}
+.weather-desc{font-family:'IBM Plex Mono'; font-size:12px; color:rgba(32,32,28,0.6); text-transform:uppercase; letter-spacing:0.05em;}
+.weather-days{
+  display:flex; gap:10px; overflow-x:auto; padding-bottom:6px;
+  scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+  flex:1 1 auto; min-width:0;
+}
+.weather-days::-webkit-scrollbar{height:6px;}
+.weather-days::-webkit-scrollbar-thumb{background:var(--line); border-radius:10px;}
+.weather-day{
+  background:var(--paper-2); border-radius:10px; padding:8px 10px; text-align:center;
+  min-width:56px; flex:0 0 auto; scroll-snap-align:start;
+}
+.weather-day .wd-label{font-family:'IBM Plex Mono'; font-size:9px; text-transform:uppercase; color:rgba(32,32,28,0.5);}
+.weather-day .wd-icon{font-size:18px; margin:3px 0;}
+.weather-day .wd-temp{font-family:'IBM Plex Mono'; font-size:11px; color:var(--indigo);}
+
+  .conv-row{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .conv-field{flex:1; position:relative;}
+.conv-field label{
+  display:inline-block; font-family:'IBM Plex Mono'; font-size:11px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase; margin-bottom:6px; padding:4px 10px; border-radius:999px;
+  transition:background .15s, color .15s;
+}
+.conv-field label.curr-usd{background:rgba(47,111,94,0.15); color:var(--jade);}
+.conv-field label.curr-thb{background:rgba(227,162,59,0.22); color:var(--marigold-dark);}
+  .conv-field input{
+    width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line);
+    font-family:'IBM Plex Mono'; font-size:18px; font-weight:600; color:var(--indigo); background:#fff;
+  }
+  .conv-field input:focus{outline:none; border-color:var(--marigold-dark);}
+  .conv-swap{font-size:20px; color:var(--marigold-dark); padding-top:18px; background:none; border:none; cursor:pointer; transition:transform .2s;}
+  .conv-swap:hover{transform:rotate(180deg);}
+  .rate-line{
+    display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono'; font-size:12px;
+    color:rgba(32,32,28,0.6); border-top:1px dashed var(--line); padding-top:14px;
+  }
+  .rate-edit-btn{background:none; border:none; color:var(--marigold-dark); font-family:'IBM Plex Mono'; font-size:12px; text-decoration:underline;}
+  .rate-input-row{display:none; align-items:center; gap:8px; margin-top:10px;}
+  .rate-input-row.show{display:flex;}
+  .rate-input-row input{width:90px; padding:6px 8px; border-radius:6px; border:1.5px solid var(--line); font-family:'IBM Plex Mono';}
+  .rate-input-row button{background:var(--indigo); color:#fdfaf2; border:none; padding:6px 12px; border-radius:6px; font-family:'IBM Plex Mono'; font-size:11px;}
+
+  /* ===== TICKET DAY NAV (itinerary) ===== */
+  .path-card{background:var(--card); border-radius:16px; box-shadow:var(--shadow); padding:22px 24px 18px; overflow-x:auto; margin-bottom:18px;}
+  .path-track{position:relative; padding:26px 6px 6px; min-width:920px;}
+  .path-track .line{position:absolute; left:22px; right:22px; top:38px; height:2px; background:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px);}
+  .stops-row{display:flex; justify-content:space-between; position:relative;}
+  .daytab{flex:1; text-align:center; cursor:pointer; padding-top:14px; border:none; background:none; font-family:inherit;}
+  .daytab .node{width:12px;height:12px;border-radius:50%;background:var(--paper-2);border:2px solid var(--indigo); margin:0 auto 8px; position:relative; z-index:2; transition:all .2s;}
+  .daytab.active .node{background:var(--marigold); border-color:var(--marigold-dark); transform:scale(1.3);}
+  .daytab .d{font-family:'IBM Plex Mono'; font-size:10px; color:rgba(32,32,28,0.55);}
+  .daytab .n{font-family:'Big Shoulders Display'; font-weight:700; font-size:15px; color:var(--indigo);}
+  .daytab.active .n{color:var(--marigold-dark);}
+
+  .view-toggle{display:flex; gap:8px; margin-bottom:16px;}
+  .view-toggle button{
+    font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    padding:9px 16px; border-radius:9px; border:1.5px solid var(--indigo); background:transparent; color:var(--indigo);
+  }
+  .view-toggle button.on{background:var(--indigo); color:#fdfaf2;}
+
+  .filters{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px;}
+  .chip{font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.04em; padding:8px 14px; border-radius:999px; border:1.5px solid var(--indigo); background:transparent; color:var(--indigo);}
+  .chip.on{background:var(--indigo); color:#fdfaf2;}
+
+  .detail-card{background:var(--card); border-radius:20px; box-shadow:var(--shadow); padding:32px 32px 26px;}
+  .detail-top{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:6px;}
+  .tag-select{
+    font-family:'IBM Plex Mono'; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    padding:5px 10px; border-radius:6px; color:#fdfaf2; border:none;
+  }
+  .edit-input{
+    border:none; background:transparent; border-bottom:1.5px dashed transparent; width:100%;
+    font-family:inherit; color:inherit; padding:2px 0; transition:border-color .15s;
+  }
+  .edit-input:hover, .edit-input:focus{border-bottom-color:var(--marigold-dark); outline:none; background:rgba(227,162,59,0.06);}
+  .title-input{font-family:'Big Shoulders Display'; font-weight:800; font-size:clamp(24px,3.5vw,36px); color:var(--indigo); margin:8px 0;}
+  .narrative-input{font-size:14.5px; line-height:1.5; color:rgba(32,32,28,0.75); resize:vertical; min-height:44px; max-width:70ch;}
+
+  .stop-card{border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-top:14px; position:relative; background:rgba(255,255,255,0.4);}
+  .stop-grid{display:grid; grid-template-columns:100px 1fr 130px; gap:12px; margin-bottom:8px;}
+  @media(max-width:700px){.stop-grid{grid-template-columns:1fr 1fr;}}
+  .stop-grid label, .field-label{display:block; font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.45); margin-bottom:3px;}
+  .stop-name-input{font-family:'Big Shoulders Display'; font-weight:700; font-size:18px; color:var(--indigo);}
+  .stop-note-input{font-size:13.5px; line-height:1.5; color:rgba(32,32,28,0.75); resize:vertical; min-height:38px; width:100%;}
+  .travel-row{display:flex; align-items:center; gap:8px; margin-top:8px; font-size:12.5px; color:var(--jade);}
+  .travel-row .ico{flex:0 0 auto;}
+  .remove-stop{position:absolute; top:12px; right:12px; background:none; border:none; color:var(--lacquer); font-size:16px; opacity:0.5;}
+  .remove-stop:hover{opacity:1;}
+  .cat-select-inline{font-family:'IBM Plex Mono'; font-size:11px; padding:6px 8px; border-radius:6px; border:1.5px solid var(--line); width:100%; background:#fff;}
+  .add-stop-btn{
+    margin-top:16px; background:none; border:1.5px dashed var(--indigo); color:var(--indigo);
+    padding:10px 16px; border-radius:10px; font-family:'IBM Plex Mono'; font-size:12px; width:100%;
+  }
+  .add-stop-btn:hover{background:var(--indigo); color:#fdfaf2; border-style:solid;}
+  .detail-nav{display:flex; justify-content:space-between; margin-top:24px;}
+  .nav-btn2{font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; background:none; border:1.5px solid var(--indigo); color:var(--indigo); padding:10px 16px; border-radius:8px;}
+  .nav-btn2:hover{background:var(--indigo); color:#fdfaf2;}
+  .nav-btn2:disabled{opacity:0.25; cursor:default;}
+
+  .cat-agg-item{border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; background:rgba(255,255,255,0.4); cursor:pointer; transition:border-color .15s;}
+  .cat-agg-item:hover{border-color:var(--marigold-dark);}
+  .cat-agg-top{display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .cat-agg-name{font-family:'Big Shoulders Display'; font-weight:700; font-size:17px; color:var(--indigo);}
+  .cat-agg-day{font-family:'IBM Plex Mono'; font-size:10.5px; color:rgba(32,32,28,0.5); text-transform:uppercase;}
+  .cat-agg-note{font-size:13px; color:rgba(32,32,28,0.65); margin-top:6px;}
+
+  /* ===== TODO ===== */
+  .todo-input-row{display:flex; gap:10px; margin-bottom:14px;}
+  .todo-input-row input{flex:1; padding:13px 16px; border-radius:10px; border:1.5px solid var(--line); font-size:14.5px;}
+  .todo-input-row input:focus{outline:none; border-color:var(--marigold-dark);}
+  .todo-input-row button{background:var(--indigo); color:#fdfaf2; border:none; padding:0 20px; border-radius:10px; font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase;}
+  .todo-sort-row{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .todo-sort-row label{font-family:'IBM Plex Mono'; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.5);}
+  .todo-sort-row select{padding:8px 10px; border-radius:8px; border:1.5px solid var(--line); font-size:12.5px;}
+  .todo-drag-hint{font-family:'IBM Plex Mono'; font-size:11px; color:rgba(32,32,28,0.4); margin-left:auto;}
+  .todo-item{display:flex; align-items:center; gap:12px; padding:13px 4px; border-bottom:1px dashed var(--line);}
+  .todo-item:last-child{border-bottom:none;}
+  .todo-item.dragging{opacity:0.4;}
+  .todo-item.drag-over{border-top:2px solid var(--marigold-dark);}
+  .todo-drag-handle{flex:0 0 auto; color:rgba(32,32,28,0.3); font-size:14px; cursor:grab; letter-spacing:-2px;}
+  .todo-check{width:20px; height:20px; border-radius:6px; border:2px solid var(--indigo); flex:0 0 auto; display:flex; align-items:center; justify-content:center; background:none;}
+  .todo-check.done{background:var(--jade); border-color:var(--jade); color:#fdfaf2; font-size:13px;}
+  .todo-text{flex:1; font-size:14.5px;}
+  .todo-item.done .todo-text{text-decoration:line-through; color:rgba(32,32,28,0.4);}
+  .todo-del{background:none; border:none; color:var(--lacquer); opacity:0.5; font-size:15px;}
+  .todo-del:hover{opacity:1;}
+  .empty-note{color:rgba(32,32,28,0.4); font-size:13.5px; font-style:italic; padding:10px 0;}
+
+  /* ===== EXPENSES ===== */
+  .dash-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:22px;}
+  @media(max-width:700px){.dash-grid{grid-template-columns:1fr;}}
+  .dash-card{background:var(--indigo); color:#fdfaf2; border-radius:18px; box-shadow:var(--shadow); padding:22px 26px;}
+  .dash-card .lbl{font-family:'IBM Plex Mono'; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(253,250,242,0.55);}
+  .dash-card .big{font-family:'Big Shoulders Display'; font-weight:800; font-size:30px; color:var(--marigold); margin-top:6px;}
+  .dash-card .sub{font-family:'IBM Plex Mono'; font-size:12px; color:rgba(253,250,242,0.6); margin-top:6px;}
+  .dash-card.balance{background:var(--marigold); color:var(--indigo);}
+  .dash-card.balance .lbl{color:rgba(29,42,68,0.6);}
+  .dash-card.balance .big{color:var(--indigo);}
+  .dash-card.balance .sub{color:rgba(29,42,68,0.7);}
+  .dash-card.settled{background:var(--jade); color:#fdfaf2;}
+  .dash-card.settled .lbl{color:rgba(253,250,242,0.7);}
+  .dash-card.settled .big{color:#fdfaf2;}
+  .settle-btn{margin-top:12px; background:var(--indigo); color:#fdfaf2; border:none; padding:9px 16px; border-radius:9px; font-family:'IBM Plex Mono'; font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase;}
+  .dash-card.balance .settle-btn{background:var(--indigo); color:#fdfaf2;}
+
+  .mini-conv{display:flex; align-items:center; gap:10px; margin-bottom:16px;}
+  .mini-conv .conv-field{max-width:160px;}
+  .mini-conv .conv-field input{font-size:15px; padding:9px 11px;}
+  .mini-conv .conv-swap{font-size:16px; padding-top:8px;}
+
+.exp-form{display:grid; grid-template-columns:2fr 1.3fr 1fr 1.3fr 1fr; gap:10px; margin-bottom:14px; align-items:end;}
+  @media(max-width:900px){.exp-form{grid-template-columns:1fr 1fr;}}
+  .exp-form .f label{display:block; font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.5); margin-bottom:5px;}
+  .exp-form input, .exp-form select{width:100%; padding:11px 12px; border-radius:9px; border:1.5px solid var(--line); font-size:13.5px;}
+
+  .split-block{border-top:1px dashed var(--line); margin-top:6px; padding-top:16px;}
+.owe-input-row{display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:10px; max-width:420px;}
+  .owe-input-row .f label{display:block; font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.5); margin-bottom:5px;}
+  .owe-input-row input{width:100%; padding:11px 12px; border-radius:9px; border:1.5px solid var(--line); font-size:13.5px;}
+  .calc-check{font-family:'IBM Plex Mono'; font-size:12.5px; padding:12px 14px; border-radius:9px; margin-bottom:14px; line-height:1.6;}
+  .calc-check.ok{background:rgba(47,111,94,0.12); color:var(--jade);}
+  .calc-check.bad{background:rgba(163,59,59,0.12); color:var(--lacquer);}
+  .calc-check .row{display:flex; justify-content:space-between; gap:10px;}
+  .calc-check .tip-note{opacity:0.8; font-size:11.5px; margin-top:4px;}
+  .exp-save-row{display:flex; gap:10px; justify-content:flex-end;}
+  .exp-save-row button{font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; padding:11px 20px; border-radius:9px; border:none;}
+  .exp-save-btn{background:var(--indigo); color:#fdfaf2;}
+  .exp-save-btn:disabled{opacity:0.35;}
+  .exp-cancel-btn{background:transparent; border:1.5px solid var(--indigo) !important; color:var(--indigo);}
+
+  .exp-search{width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid var(--line); font-size:14px; margin-bottom:16px;}
+  table.exp-table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.exp-table th{text-align:left; font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.5); padding:8px 6px; border-bottom:1.5px solid var(--line);}
+  table.exp-table td{padding:11px 6px; border-bottom:1px dashed var(--line); vertical-align:top;}
+  .cat-pill{font-family:'IBM Plex Mono'; font-size:10.5px; padding:3px 9px; border-radius:999px; color:#fdfaf2; flex:0 0 auto; display:inline-block;}
+  .row-actions{display:flex; gap:6px;}
+  .row-actions button{background:none; border:none; opacity:0.55; font-size:14px;}
+  .row-actions button:hover{opacity:1;}
+  .row-actions .edit-btn{color:var(--indigo);}
+  .row-actions .del-btn{color:var(--lacquer);}
+  .split-tag{font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--jade); text-transform:none;}
+  .when-tag{font-family:'IBM Plex Mono'; font-size:10.5px; color:rgba(32,32,28,0.45); white-space:nowrap;}
+
+  .settlement-row{display:flex; justify-content:space-between; padding:10px 2px; border-bottom:1px dashed var(--line); font-size:13.5px;}
+  .settlement-row:last-child{border-bottom:none;}
+  .settlement-row .amt{font-family:'IBM Plex Mono'; color:var(--jade); font-weight:600;}
+
+  .totals-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:10px;}
+  .total-box{background:var(--paper-2); border-radius:12px; padding:14px 16px;}
+  .total-box .lbl{font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.55);}
+  .total-box .val{font-family:'Big Shoulders Display'; font-weight:800; font-size:22px; color:var(--indigo); margin-top:4px;}
+
+  /* modal */
+  .modal-overlay{position:fixed; inset:0; background:rgba(29,42,68,0.55); display:none; align-items:center; justify-content:center; z-index:100; padding:20px;}
+  .modal-overlay.show{display:flex;}
+  .modal-box{background:var(--card); border-radius:18px; padding:26px 28px; max-width:520px; width:100%; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow);}
+  .modal-box h3{font-family:'Big Shoulders Display'; font-weight:800; font-size:22px; color:var(--indigo); margin:0 0 16px; text-transform:uppercase;}
+
+  /* ===== KEY/VALUE ADD-REMOVE LISTS (flights, good to know, emergency) ===== */
+  .kv-row{display:flex; align-items:center; gap:12px; padding:11px 2px; border-bottom:1px dashed var(--line);}
+  .kv-row:last-child{border-bottom:none;}
+  .kv-label{font-family:'IBM Plex Mono'; font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:rgba(32,32,28,0.55); flex:0 0 auto; min-width:150px;}
+  .kv-value{font-size:14px; color:var(--ink); flex:1;}
+  .kv-del{background:none; border:none; color:var(--lacquer); opacity:0.5; font-size:14px; flex:0 0 auto;}
+  .kv-del:hover{opacity:1;}
+  .kv-add-form{display:grid; grid-template-columns:1fr 1.4fr auto; gap:10px; margin-top:16px;}
+  @media(max-width:640px){.kv-add-form{grid-template-columns:1fr;}}
+  .kv-add-form input, .kv-add-form select{width:100%; padding:11px 12px; border-radius:9px; border:1.5px solid var(--line); font-size:13.5px;}
+  .kv-add-form button{background:var(--indigo); color:#fdfaf2; border:none; padding:11px 16px; border-radius:9px; font-family:'IBM Plex Mono'; font-size:12px;}
+
+  .note-item{display:flex; align-items:flex-start; gap:12px; padding:11px 2px; border-bottom:1px dashed var(--line);}
+  .note-item:last-child{border-bottom:none;}
+  .note-item .txt{flex:1; font-size:14px; line-height:1.5;}
+  .note-add-form{display:flex; gap:10px; margin-top:16px; align-items:stretch;}
+  .note-add-form textarea{flex:1; padding:9px 12px; border-radius:9px; border:1.5px solid var(--line); font-size:13.5px; resize:vertical; height:39px; min-height:39px; box-sizing:border-box;}
+  .note-add-form button{background:var(--indigo); color:#fdfaf2; border:none; padding:0 18px; border-radius:9px; font-family:'IBM Plex Mono'; font-size:12px; flex:0 0 auto; height:39px;}
+
+  .emergency-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--line); font-size:14px;}
+  .emergency-row:last-child{border-bottom:none;}
+  .emergency-row .num{font-family:'IBM Plex Mono'; font-weight:600; color:var(--lacquer);}
+  .hosp-block{padding:12px 0; border-bottom:1px dashed var(--line);}
+  .hosp-block:last-child{border-bottom:none;}
+  .hosp-name{font-family:'Big Shoulders Display'; font-weight:700; font-size:16px; color:var(--indigo);}
+  .hosp-detail{font-size:13px; color:rgba(32,32,28,0.7); margin-top:2px;}
+
+  /* ===== PHRASES ===== */
+  .phrase-item{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:12px 2px; border-bottom:1px dashed var(--line);}
+  .phrase-item:last-child{border-bottom:none;}
+  .phrase-en{font-family:'Big Shoulders Display'; font-weight:700; font-size:16.5px; color:var(--indigo);}
+  .phrase-th{font-size:14.5px; margin-top:2px;}
+  .phrase-pr{font-family:'IBM Plex Mono'; font-size:12.5px; color:rgba(32,32,28,0.55); margin-left:8px;}
+  .phrase-add-form{display:grid; grid-template-columns:1.3fr 1fr 1fr auto; gap:10px; margin-top:16px;}
+  @media(max-width:760px){.phrase-add-form{grid-template-columns:1fr 1fr;}}
+  .phrase-add-form input{width:100%; padding:11px 12px; border-radius:9px; border:1.5px solid var(--line); font-size:13.5px;}
+  .phrase-add-form button{background:var(--indigo); color:#fdfaf2; border:none; padding:11px 16px; border-radius:9px; font-family:'IBM Plex Mono'; font-size:12px;}
+
+  /* ===== MEDIA ===== */
+  .media-section-head{font-family:'Big Shoulders Display'; font-weight:800; font-size:20px; text-transform:uppercase; letter-spacing:0.01em; color:var(--indigo); margin:20px 0 8px; padding-top:14px; border-top:1px dashed var(--line);}
+  .media-section-head:first-child{margin-top:0; padding-top:0; border-top:none;}
+  .media-add-form{display:flex; gap:10px; align-items:end; flex-wrap:wrap;}
+  .media-add-form .f{flex:1 1 140px; min-width:120px;}
+  .media-add-form .f.btn-f{flex:0 0 auto;}
+  .media-add-form .f label{display:block; font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(32,32,28,0.5); margin-bottom:5px;}
+  .media-add-form input, .media-add-form select{width:100%; padding:11px 12px; border-radius:9px; border:1.5px solid var(--line); font-size:13.5px; height:44px; box-sizing:border-box;}
+  .media-add-btn{background:var(--indigo); color:#fdfaf2; border:none; border-radius:9px; font-family:'IBM Plex Mono'; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; height:44px; padding:0 22px; white-space:nowrap;}
+  .media-add-btn:hover{background:var(--indigo-2);}
+
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="brand">✈ BKK HQ</div>
+  <button class="navbtn" data-page="home">Home</button>
+  <button class="navbtn" data-page="phrases">Thai Phrases</button>
+  <button class="navbtn" data-page="itinerary">Itinerary</button>
+  <button class="navbtn" data-page="todo">To-Do</button>
+  <button class="navbtn" data-page="expenses">Expenses</button>
+  <button class="navbtn" data-page="media">Thai Media</button>
+  <button class="navbtn" data-page="travel">Travel Info</button>
+  <span class="nav-clock" id="navNyClock" title="Live clock, just for reference, not clickable"><span class="dotlbl">Live ·</span>NY --:--</span>
+</div>
+
+<!-- HOME PAGE -->
+<div class="page" id="page-home">
+  <div class="hero-wrap">
+    <div class="hero-inner">
+      <div class="plane-emoji">🛫</div>
+      <div class="hero-eyebrow" id="heroEyebrow">JFK → BKK · TWO PASSENGERS</div>
+      <div class="hero-title">Wheels up in<br><span id="cdBigLabel">...</span></div>
+      <div class="hero-sub" id="heroSub">Countdown to takeoff — July 14, 2026, 3:45 PM (JFK time)</div>
+      <div class="countdown" id="countdownBoxes"></div>
+      <div class="cd-target" id="cdTargetNote">Landing in Bangkok the night of July 15th ✈ Home July 28th</div>
+    </div>
+  </div>
+  <div class="home-grid">
+    <div class="panel">
+      <h3>Currency converter</h3>
+      <div class="conv-row">
+        <div class="conv-field">
+          <label id="homeConvLeftLabel">USD</label>
+          <input type="number" id="homeConvLeft" placeholder="0.00" inputmode="decimal">
+        </div>
+        <button class="conv-swap" id="homeConvSwap" title="Switch which currency you type into">⇄</button>
+        <div class="conv-field">
+          <label id="homeConvRightLabel">THB</label>
+          <input type="number" id="homeConvRight" placeholder="0.00" inputmode="decimal">
+        </div>
+      </div>
+      <div class="rate-line">
+        <span>1 USD = <span id="rateDisplay">33.2</span> THB</span>
+        <button class="rate-edit-btn" id="rateEditBtn">update rate</button>
+      </div>
+      <div class="rate-input-row" id="rateInputRow">
+        <input type="number" id="rateInput" step="0.01">
+        <button id="rateSaveBtn">Save</button>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>World clocks</h3>
+      <div style="display:flex; gap:36px; flex-wrap:wrap;">
+        <div class="clock-block">
+          <div class="clock-lbl">New York</div>
+          <div class="clock-val" style="color:var(--indigo);" id="homeNyClock">--:--</div>
+        </div>
+        <div class="clock-block">
+          <div class="clock-lbl">Bangkok</div>
+          <div class="clock-val" style="color:var(--marigold-dark);" id="homeBkkClock">--:--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- for the weather app-->
+
+
+<div class="panel weather-panel">
+  <h3>Bangkok weather — next 12 hours</h3>
+  <div id="weatherWrap"><div class="empty-note">Loading forecast…</div></div>
+</div>
+  </div>
+</div>
+
+<!-- THAI PHRASES PAGE -->
+<div class="page" id="page-phrases">
+  <div class="wrap">
+    <h1 class="pagehead">Thai Phrases</h1>
+    <p class="pagesub">A starter set of useful phrases with rough pronunciation guides. Add your own to any category, or drop anything else into "EXTRA."</p>
+    <div id="phrasesWrap"></div>
+  </div>
+</div>
+
+<!-- ITINERARY PAGE -->
+<div class="page" id="page-itinerary">
+  <div class="wrap">
+    <h1 class="pagehead">The Itinerary</h1>
+    <p class="pagesub">12 days based out of Dusit. Browse day-by-day to see every temple, market, or animal stop across the whole trip.</p>
+
+    <div class="path-card">
+      <div class="path-track" id="pathTrack">
+        <div class="line"></div>
+        <div class="stops-row" id="stopsRow"></div>
+      </div>
+    </div>
+    <div class="detail-card" id="detailCard"></div>
+  </div>
+</div>
+
+<!-- TODO PAGE -->
+<div class="page" id="page-todo">
+  <div class="wrap">
+    <h1 class="pagehead">To-Do List</h1>
+    <p class="pagesub">Shared prep checklist, add anything you think of, check it off, or remove it once it's done.</p>
+    <div class="panel">
+      <div class="todo-input-row">
+        <input type="text" id="todoInput" placeholder="Add something to the list…">
+        <button id="todoAddBtn">Add</button>
+      </div>
+      <div class="todo-sort-row">
+        <span class="todo-drag-hint" id="todoDragHint">Drag items to reorder</span>
+      </div>
+      <div id="todoList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPENSES PAGE -->
+<div class="page" id="page-expenses">
+  <div class="wrap">
+    <h1 class="pagehead">Expense Splitter</h1>
+    <p class="pagesub">Log purchases as you go so splitting things afterward is painless.</p>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="lbl">Total spent</div>
+        <div class="big" id="dashTotalUsd">$0.00</div>
+        <div class="sub" id="dashTotalThb">฿0</div>
+      </div>
+      <div class="dash-card balance" id="dashBalanceCard">
+        <div class="lbl">Current balance</div>
+        <div class="big" id="dashBalanceLine">Settled up</div>
+        <div class="sub" id="dashBalanceSub"></div>
+        <button class="settle-btn" id="settleUpBtn">Settle up</button>
+      </div>
+    </div>
+
+    <div class="panel" style="background:var(--marigold); box-shadow:none; padding:16px 22px; display:flex; align-items:center; gap:12px;">
+      <span style="font-size:20px;">📸</span>
+      <span style="font-family:'IBM Plex Mono'; font-size:13px; color:var(--indigo); font-weight:600;">Remember to add your receipts to the shared photo album.</span>
+    </div>
+
+    <div class="panel">
+      <h3>Quick convert</h3>
+      <div class="mini-conv">
+        <div class="conv-field">
+          <label id="expConvLeftLabel">USD</label>
+          <input type="number" id="expConvLeft" placeholder="0.00" inputmode="decimal">
+        </div>
+        <button class="conv-swap" id="expConvSwap" title="Switch which currency you type into">⇄</button>
+        <div class="conv-field">
+          <label id="expConvRightLabel">THB</label>
+          <input type="number" id="expConvRight" placeholder="0.00" inputmode="decimal">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 id="expFormHeading">Add expense</h3>
+      <div class="exp-form">
+        <div class="f"><label>Description</label><input type="text" id="expDesc" placeholder="e.g. Pad thai dinner" oninput="onExpAmountChange()"></div>
+<div class="f">
+  <label>Amount</label>
+  <input type="text" id="expAmt" class="mathable-input" placeholder="e.g. 120+45.50" autocomplete="off" oninput="onExpAmountChange()">
+<div class="mathable-hint" id="expAmtSum">&nbsp;</div>
+</div>
+        <div class="f"><label>Currency</label>
+          <select id="expCurrency" onchange="onExpAmountChange()">
+            <option value="" selected disabled>Select…</option>
+            <option value="USD">USD</option>
+            <option value="THB">THB</option>
+          </select>
+        </div>
+<div class="f">
+  <label>Tip (optional)</label>
+  <input type="text" id="expTip" class="mathable-input" placeholder="e.g. 20+5" autocomplete="off" oninput="onExpAmountChange()">
+<div class="mathable-hint" id="expTipSum">&nbsp;</div>
+</div>
+        <div class="f"><label>Paid by</label>
+          <select id="expPaidBy" onchange="onExpPaidByChange()">
+            <option value="" selected disabled>Select…</option>
+            <option value="Z">Z</option>
+            <option value="E">E</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="split-block">
+        <div class="split-mode-row" id="splitModeRow">
+  <button type="button" class="split-mode-btn" id="splitEqualBtn" onclick="setSplitMode('equal')">Equal split</button>
+  <button type="button" class="split-mode-btn" id="splitCustomBtn" onclick="setSplitMode('custom')">Custom split</button>
+</div>
+        <div class="owe-input-row" id="oweInputRow" style="display:none;">
+<div class="f">
+  <label id="oweInputLabel">How much does the other person owe?</label>
+  <input type="text" id="expOweInput" class="mathable-input" placeholder="e.g. 250/2" autocomplete="off" oninput="onOweInputChange()">
+<div class="mathable-hint" id="expOweSum">&nbsp;</div>
+</div>
+        </div>
+        <div id="expEditNoteRow" class="owe-input-row" style="display:none;">
+          <div class="f"><label>What changed? (required to save this edit)</label><input type="text" id="expEditNote" placeholder="e.g. Fixed the amount, it was actually ฿450" oninput="onExpAmountChange()"></div>
+        </div>
+        <div class="calc-check" id="calcCheck"></div>
+        <div class="exp-save-row">
+          <button type="button" class="exp-cancel-btn" id="expCancelBtn" style="display:none;" onclick="cancelExpenseEdit()">Cancel</button>
+          <button type="button" class="exp-save-btn" id="expAddBtn" onclick="saveExpense()">Add expense</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>History</h3>
+      <input type="text" class="exp-search" id="expSearch" placeholder="Search expenses by name…" oninput="renderExpenses()">
+      <div style="overflow-x:auto;">
+        <table class="exp-table">
+<thead><tr><th>Description</th><th>Paid by</th><th>Balance</th><th>Amount</th><th>Added / changed</th><th></th></tr></thead>
+          <tbody id="expTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <div class="panel">
+      <h3>Settlement history</h3>
+      <div id="settlementList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTLE UP MODAL -->
+<div class="modal-overlay" id="settleModal">
+  <div class="modal-box">
+    <h3>Settle up</h3>
+    <p style="font-size:13.5px; color:rgba(32,32,28,0.65); margin-top:-8px;" id="settleModalDesc">Record a payment to bring the balance back to zero.</p>
+    <div class="exp-form" style="grid-template-columns:1fr 1fr;">
+      <div class="f"><label>Amount (USD)</label><input type="number" id="settleAmtUsd" step="0.01"></div>
+      <div class="f"><label>Note (optional)</label><input type="text" id="settleNote" placeholder="e.g. Venmo transfer"></div>
+    </div>
+    <div class="exp-save-row" style="margin-top:10px;">
+      <button type="button" class="exp-cancel-btn" onclick="closeSettleModal()">Cancel</button>
+      <button type="button" class="exp-save-btn" onclick="confirmSettle()">Record settlement</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE EXPENSE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteConfirmModal">
+  <div class="modal-box">
+    <h3>Delete this expense?</h3>
+    <p style="font-size:13.5px; color:rgba(32,32,28,0.65); margin-top:-8px;" id="deleteConfirmDesc">This can't be undone.</p>
+    <div class="exp-save-row" style="margin-top:10px;">
+      <button type="button" class="exp-cancel-btn" onclick="closeDeleteConfirm()">Cancel</button>
+      <button type="button" class="exp-save-btn" style="background:var(--lacquer);" onclick="confirmDeleteExpense()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- THAI MEDIA PAGE -->
+<div class="page" id="page-media">
+  <div class="wrap">
+    <h1 class="pagehead">Thai Media</h1>
+    <p class="pagesub">Songs, movies, shows, and TikToks worth checking out before or during the trip, drop links as you find them. Everything sorts itself into the right section below.</p>
+    <div class="panel">
+      <div class="media-add-form">
+        <div class="f"><label>Type</label>
+          <select id="mediaType">
+            <option value="" selected disabled>Select…</option>
+            <option value="Song">Song</option>
+            <option value="Movie">Movie</option>
+            <option value="TV Show">TV Show</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="f"><label>Title</label><input type="text" id="mediaTitle" placeholder="e.g. Bad Genius"></div>
+        <div class="f"><label>Link</label><input type="text" id="mediaLink" placeholder="https://…"></div>
+        <div class="f btn-f"><label>&nbsp;</label><button class="media-add-btn" id="mediaAddBtn">Add</button></div>
+      </div>
+      <div id="mediaList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAVEL INFO PAGE -->
+<div class="page" id="page-travel">
+  <div class="wrap">
+    <h1 class="pagehead">Travel Info</h1>
+    <p class="pagesub">Flight details, hotel info, and emergency contacts in one place.</p>
+
+    <div class="panel">
+      <h3>Z's flight</h3>
+      <div id="myFlightList"></div>
+      <div class="kv-add-form">
+        <input type="text" id="myFlightLabelInput" placeholder="Label e.g. Flight number, Airline">
+        <input type="text" id="myFlightValueInput" placeholder="Value">
+        <button id="myFlightAddBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>E's flight</h3>
+      <div id="friendFlightList"></div>
+      <div class="kv-add-form">
+        <input type="text" id="friendFlightLabelInput" placeholder="Label e.g. Flight number, Airline">
+        <input type="text" id="friendFlightValueInput" placeholder="Value">
+        <button id="friendFlightAddBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Hotel</h3>
+      <div class="hosp-block">
+        <div class="hosp-name">TARA Bangkok Riverside</div>
+        <div class="hosp-detail">196/1 Ratchawithi Road, Khwaeng Wachira Phayaban, Dusit District, Dusit, 10300 Bangkok, Thailand</div>
+      </div>
+      <div class="kv-row"><span class="kv-label">Confirmation #</span><span class="kv-value">5423673214</span></div>
+      <div class="kv-row"><span class="kv-label">Confirmation PIN</span><span class="kv-value">2257</span></div>
+      <div class="kv-row"><span class="kv-label">Check-in time</span><span class="kv-value">2:00 PM – 12:00 AM</span></div>
+      <div class="kv-row"><span class="kv-label">Check-out time</span><span class="kv-value">11:00 AM – 12:00 PM</span></div>
+      <div style="margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);">
+        <div class="field-label" style="margin-bottom:8px;">Notes</div>
+        <div id="hotelNotesList"></div>
+        <div class="note-add-form">
+          <textarea id="hotelNoteInput" placeholder="Add a note about the hotel…"></textarea>
+          <button id="hotelNoteAddBtn">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Emergency numbers</h3>
+      <div id="emergencyList"></div>
+      <div class="kv-add-form">
+        <input type="text" id="emgLabelInput" placeholder="e.g. Embassy, Airline, Insurance">
+        <input type="text" id="emgNumberInput" placeholder="Phone number">
+        <button id="emgAddBtn">Add</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Nearby hospitals (Dusit area)</h3>
+      <div class="hosp-block">
+        <div class="hosp-name">Vajira Hospital</div>
+        <div class="hosp-detail">681 Samsen Rd, Wachira Phayaban, Dusit District, Bangkok 10300 · +66 2 244 3000</div>
+        <div class="hosp-detail">Large public teaching hospital right in Dusit, with a trauma/emergency center, closest option to your hotel.</div>
+      </div>
+      <div class="hosp-block">
+        <div class="hosp-name">Bangkok Hospital (Bangkok Hospital Group)</div>
+        <div class="hosp-detail">2 Soi Soonvijai 7, New Petchburi Rd, Bangkok 10310 · +66 2 310 3000</div>
+        <div class="hosp-detail">Private, international-patient-friendly hospital, a bit further out, but widely used by tourists and expats and generally has English-speaking staff.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Good to know</h3>
+      <p style="font-size:13px; color:rgba(32,32,28,0.55); margin:-8px 0 14px;">Allergies, blood type, prescriptions, anything worth having on hand, add whatever's useful.</p>
+      <div id="goodToKnowList"></div>
+      <div class="kv-add-form">
+        <input type="text" id="gtkLabelInput" placeholder="e.g. Allergies, Blood type">
+        <input type="text" id="gtkValueInput" placeholder="Details">
+        <button id="gtkAddBtn">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+/* ---------------- Firebase setup ----------------
+   1. Go to https://console.firebase.google.com, create a project (free Spark plan is fine).
+   2. Build > Firestore Database > Create database > start in "test mode" (or use the rules below).
+   3. Project settings (gear icon) > General > "Your apps" > add a Web app > copy the config object it gives you.
+   4. Paste those values in below, replacing every "REPLACE_ME" string.
+------------------------------------------------------ */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('/sw.js').catch(e=>console.warn('SW registration failed', e));
+  });
+}
+//for the weather app
+const WEATHER_CODES = {
+  0:['☀️','Clear sky'], 1:['🌤️','Mainly clear'], 2:['⛅','Partly cloudy'], 3:['☁️','Overcast'],
+  45:['🌫️','Fog'], 48:['🌫️','Fog'],
+  51:['🌦️','Light drizzle'], 53:['🌦️','Drizzle'], 55:['🌧️','Heavy drizzle'],
+  61:['🌦️','Light rain'], 63:['🌧️','Rain'], 65:['🌧️','Heavy rain'],
+  80:['🌦️','Rain showers'], 81:['🌧️','Rain showers'], 82:['⛈️','Violent showers'],
+  95:['⛈️','Thunderstorm'], 96:['⛈️','Thunderstorm w/ hail'], 99:['⛈️','Thunderstorm w/ hail']
+};
+function weatherIcon(code){ return (WEATHER_CODES[code] || ['🌡️','—'])[0]; }
+function weatherDesc(code){ return (WEATHER_CODES[code] || ['🌡️','Unknown'])[1]; }
+
+async function loadWeather(){
+  const wrap = document.getElementById('weatherWrap');
+  try{
+    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=13.7563&longitude=100.5018&current_weather=true&hourly=weathercode,temperature_2m&timezone=Asia%2FBangkok&temperature_unit=fahrenheit');
+    const data = await res.json();
+    const cur = data.current_weather;
+    const hourly = data.hourly;
+
+    // find the index matching the current hour, so we show the NEXT 5 hours from now
+    const nowIso = cur.time; // e.g. "2026-07-14T15:00"
+    let startIdx = hourly.time.indexOf(nowIso);
+    if(startIdx === -1) startIdx = 0; // fallback just in case
+
+    const nextHours = hourly.time.slice(startIdx+1, startIdx+13);
+    const hoursHtml = nextHours.map((time,i)=>{
+      const idx = startIdx+1+i;
+      const d = new Date(time);
+      const label = d.toLocaleTimeString(undefined,{hour:'numeric', hour12:true});
+      return `
+        <div class="weather-day">
+          <div class="wd-label">${label}</div>
+          <div class="wd-icon">${weatherIcon(hourly.weathercode[idx])}</div>
+          <div class="wd-temp">${Math.round(hourly.temperature_2m[idx])}°</div>
+        </div>
+      `;
+    }).join('');
+
+    wrap.innerHTML = `
+      <div class="weather-grid">
+        <div class="weather-now">
+          <div class="weather-icon">${weatherIcon(cur.weathercode)}</div>
+          <div>
+            <div class="weather-temp">${Math.round(cur.temperature)}°F</div>
+            <div class="weather-desc">${weatherDesc(cur.weathercode)}</div>
+          </div>
+        </div>
+        <div class="weather-days">${hoursHtml}</div>
+      </div>
+    `;
+  }catch(e){
+    console.error('weather fetch failed', e);
+    wrap.innerHTML = '<div class="empty-note">Couldn\'t load the forecast right now.</div>';
+  }
+}
+
+setInterval(loadWeather, 30*60*1000); // refresh every 30 min
+
+// Demo build — no backend. Everything runs off local, in-browser storage only.
+const firebaseReady = false;
+const db = null;
+
+/* ---------------- local-only fallback storage ----------------
+   Used automatically whenever Firebase isn't reachable, so the page still works —
+   just without cross-device sync — instead of breaking entirely. */
+const LOCAL_PREFIX = 'bkkTripHQ:';
+const memoryStore = {};
+function localGet(key){
+  try{
+    const raw = localStorage.getItem(LOCAL_PREFIX + key);
+    return raw !== null ? JSON.parse(raw) : undefined;
+  }catch(e){ return memoryStore[key]; }
+}
+function localSet(key, value){
+  try{ localStorage.setItem(LOCAL_PREFIX + key, JSON.stringify(value)); }
+  catch(e){ memoryStore[key] = value; }
+}
+
+/* ---------------- storage helpers (Cloud Firestore, with local fallback) ---------------- */
+async function loadData(key, def){
+  const local = localGet(key);
+  return local !== undefined ? local : def;
+}
+async function saveData(key, value){
+  localSet(key, value);
+}
+/* Live sync: calls onUpdate(parsedValue) whenever the OTHER person changes this key.
+   Ignores snapshots caused by our own writes so we don't clobber what's being typed locally.
+   No-ops when Firebase isn't available. */
+function listenData(key, onUpdate){
+  // No backend in this demo build — nothing to listen for.
+}
+
+function debounce(fn, wait){
+  let t;
+  return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn(...args), wait); };
+}
+function escapeHtml(str){ return (str||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeAttr(str){ return (str||'').toString().replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function evalMathExpr(str){
+  const trimmed = String(str||'').trim();
+  if(trimmed === '') return NaN;
+  if(!/^[0-9+\-*/.%\s]+$/.test(trimmed)) return NaN;
+  try{
+    const safeExpr = trimmed.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
+    const result = Function('"use strict"; return (' + safeExpr + ')')();
+    return (typeof result === 'number' && isFinite(result)) ? result : NaN;
+  }catch(e){
+    return NaN;
+  }
+}
+
+function updateSumDisplay(elId, rawValue, currencySymbol){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const val = evalMathExpr(rawValue);
+  if(rawValue.trim() === '' || isNaN(val)){
+    el.innerHTML = '&nbsp;';
+  } else {
+    el.textContent = '= ' + (currencySymbol||'') + val.toFixed(2);
+  }
+}
+/* ---------------- nav ---------------- */
+const pages = ['home','phrases','itinerary','todo','expenses','media','travel'];
+function showPage(name, skipSave){
+  pages.forEach(p=>{
+    document.getElementById('page-'+p).classList.toggle('active', p===name);
+  });
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active', b.dataset.page===name));
+  if(!skipSave) localSet('lastPage', name);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.navbtn').forEach(b=>{
+  b.addEventListener('click', ()=>showPage(b.dataset.page));
+});
+
+/* ---------------- countdown ---------------- */
+const cdTargetOut = new Date(Date.UTC(2026,6,14,19,45,0));    // Jul 14 2026, 3:45 PM EDT (UTC-4) — outbound
+const cdTargetReturn = new Date(Date.UTC(2026,6,27,20,15,0)); // Jul 28 2026, 3:15 AM ICT (UTC+7) — flight home
+
+function renderCountdown(){
+  const now = new Date();
+  const usingReturn = now >= cdTargetOut;
+  const target = usingReturn ? cdTargetReturn : cdTargetOut;
+
+  let diff = target - now;
+  const past = diff <= 0;
+  if(past) diff = 0;
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor(diff/3600000)%24;
+  const m = Math.floor(diff/60000)%60;
+  const s = Math.floor(diff/1000)%60;
+
+  document.getElementById('heroEyebrow').textContent = usingReturn
+    ? 'BKK → JFK · TWO PASSENGERS'
+    : 'JFK → BKK · TWO PASSENGERS';
+
+  document.getElementById('heroSub').textContent = usingReturn
+    ? 'Countdown to takeoff — July 28, 2026, 3:15 AM (Bangkok time)'
+    : 'Countdown to takeoff — July 14, 2026, 3:45 PM (JFK time)';
+
+  document.getElementById('cdTargetNote').textContent = usingReturn
+    ? 'Flying home to NY ✈ Safe travels!'
+    : 'Landing in Bangkok the night of July 15th ✈ Home July 28th';
+
+  document.getElementById('cdBigLabel').textContent = (past && usingReturn)
+    ? "Welcome home! ✈"
+    : (d + " day" + (d===1?"":"s"));
+
+  const boxes = document.getElementById('countdownBoxes');
+  boxes.innerHTML = [
+    [d,'Days'], [h,'Hours'], [m,'Minutes'], [s,'Seconds']
+  ].map(([v,l])=>`<div class="cd-box"><div class="cd-num">${String(v).padStart(2,'0')}</div><div class="cd-label">${l}</div></div>`).join('');
+}
+setInterval(renderCountdown, 1000);
+
+/* ---------------- world clocks ---------------- */
+function renderClocks(){
+  const now = new Date();
+  const bkk = now.toLocaleString('en-US', {timeZone:'Asia/Bangkok', hour:'2-digit', minute:'2-digit', hour12:true});
+  const ny = now.toLocaleString('en-US', {timeZone:'America/New_York', hour:'2-digit', minute:'2-digit', hour12:true});
+  const navClock = document.getElementById('navNyClock');
+  if(navClock) navClock.innerHTML = '<span class="dotlbl">Live ·</span>NY ' + ny;
+  const homeBkk = document.getElementById('homeBkkClock');
+  if(homeBkk) homeBkk.textContent = bkk;
+  const homeNy = document.getElementById('homeNyClock');
+  if(homeNy) homeNy.textContent = ny;
+}
+setInterval(renderClocks, 1000);
+
+/* ---------------- currency converters (reusable, swappable) ---------------- */
+let rate = 33.2;
+function createConverter(opts){
+  // opts: leftInputId, rightInputId, leftLabelId, rightLabelId, swapBtnId
+  const leftEl = document.getElementById(opts.leftInputId);
+  const rightEl = document.getElementById(opts.rightInputId);
+  const leftLbl = document.getElementById(opts.leftLabelId);
+  const rightLbl = document.getElementById(opts.rightLabelId);
+  const swapBtn = document.getElementById(opts.swapBtnId);
+  let leftCurrency = 'USD'; // which currency the left field currently represents
+
+  function recalcFromLeft(){
+    if(leftEl.value === ''){ rightEl.value=''; return; }
+    const v = parseFloat(leftEl.value);
+    if(isNaN(v)){ rightEl.value=''; return; }
+    rightEl.value = leftCurrency==='USD' ? (v*rate).toFixed(2) : (v/rate).toFixed(2);
+  }
+  function recalcFromRight(){
+    if(rightEl.value === ''){ leftEl.value=''; return; }
+    const v = parseFloat(rightEl.value);
+    if(isNaN(v)){ leftEl.value=''; return; }
+    leftEl.value = leftCurrency==='USD' ? (v/rate).toFixed(2) : (v*rate).toFixed(2);
+  }
+  leftEl.addEventListener('input', recalcFromLeft);
+  rightEl.addEventListener('input', recalcFromRight);
+function applyLabelStyles(){
+    leftLbl.classList.toggle('curr-usd', leftCurrency==='USD');
+    leftLbl.classList.toggle('curr-thb', leftCurrency==='THB');
+    rightLbl.classList.toggle('curr-usd', leftCurrency!=='USD');
+    rightLbl.classList.toggle('curr-thb', leftCurrency==='USD');
+  }
+  applyLabelStyles();
+  swapBtn.addEventListener('click', ()=>{
+    leftCurrency = leftCurrency==='USD' ? 'THB' : 'USD';
+    leftLbl.textContent = leftCurrency;
+    rightLbl.textContent = leftCurrency==='USD' ? 'THB' : 'USD';
+    applyLabelStyles();
+    const tmp = leftEl.value;
+    leftEl.value = rightEl.value;
+    rightEl.value = tmp;
+  });
+  return { refresh: recalcFromLeft };
+}
+let homeConverter, expConverter;
+
+const rateEditBtn = document.getElementById('rateEditBtn');
+const rateInputRow = document.getElementById('rateInputRow');
+const rateInput = document.getElementById('rateInput');
+rateEditBtn.addEventListener('click', ()=>{
+  rateInput.value = rate;
+  rateInputRow.classList.toggle('show');
+});
+document.getElementById('rateSaveBtn').addEventListener('click', async ()=>{
+  const v = parseFloat(rateInput.value);
+  if(!isNaN(v) && v > 0){
+    rate = v;
+    document.getElementById('rateDisplay').textContent = rate;
+    await saveData('currency-rate', rate);
+    if(homeConverter) homeConverter.refresh();
+    if(expConverter) expConverter.refresh();
+    renderExpenseDashboard();
+  }
+  rateInputRow.classList.remove('show');
+});
+
+/* ================= ITINERARY ================= */
+function defaultDays(){
+  return [
+    {n:1, date:'Jul 16', title:'Dusit Day (Ease In)',
+     narrative:'Stay close to the hotel and recover from the flight while still seeing beautiful sights, right in your own neighborhood.',
+     stops:[
+       {time:'9:00 AM', name:'Vimanmek Mansion', category:'temple', note:"World's largest golden teak building, part of Dusit Palace Park. Sections have had renovation closures, so check same-day.", cost:'0-150', travel:''},
+       {time:'11:00 AM', name:'Wat Benchamabophit (Marble Temple)', category:'temple', note:'Stunning Italian marble temple, far less crowded than the Grand Palace. Great photos, free entry.', cost:'0', travel:'~10 min walk from Vimanmek'},
+       {time:'Evening', name:'Dusit street food', category:'chill', note:'Stay local for dinner, a quiet first night near the hotel.', cost:'300', travel:''}
+     ]},
+    {n:2, date:'Jul 17', title:'Grand Palace & River Temples',
+     narrative:'The big-ticket historic day, start early to beat the heat and the crowds.',
+     stops:[
+       {time:'8:30 AM', name:'The Grand Palace', category:'temple', note:'Arrive right at opening. Strict dress code: shoulders & knees covered.', cost:'500', travel:'Grab from Dusit ~15-20 min, ~฿120'},
+       {time:'11:30 AM', name:'Wat Pho (Reclining Buddha)', category:'temple', note:'Right next door, the giant reclining Buddha and the original Thai massage school.', cost:'300', travel:'Walk, next door'},
+       {time:'5:00 PM', name:'Wat Arun (Temple of Dawn)', category:'temple', note:'Cross the river by ferry from Tha Tien pier. Best photos in late afternoon light.', cost:'10', travel:'Ferry from Tha Tien pier, ~5-10 min'}
+     ]},
+    {n:3, date:'Jul 18', title:'Chatuchak Market + Jim Thompson',
+     narrative:'Weekend-only mega market day, paired with a beautiful silk house museum in the afternoon.',
+     stops:[
+       {time:'9:00 AM', name:'Chatuchak Weekend Market', category:'market', note:'Only open Sat/Sun, 15,000+ stalls. Go early, wear comfy shoes, bring a mini fan.', cost:'0', travel:'BTS to Mo Chit or MRT to Chatuchak Park, ~30 min from Dusit'},
+       {time:'3:00 PM', name:'Jim Thompson House', category:'shop', note:"Silk magnate's teak house and garden, guided tours only, closes 5pm.", cost:'250', travel:'BTS to National Stadium, ~20 min'}
+     ]},
+    {n:4, date:'Jul 19', title:'Floating Market Day Trip',
+     narrative:'Early start for the classic canal and railway market experience outside the city.',
+     stops:[
+       {time:'8:00 AM', name:'Maeklong Railway Market', category:'market', note:'Watch vendors yank back their awnings seconds before the train rolls through.', cost:'0', travel:'Included in tour van'},
+       {time:'10:00 AM', name:'Damnoen Saduak Floating Market', category:'market', note:'Best before 10am, before the boats start clearing out. Classic long-tail boat photos.', cost:'1000-1500', travel:'Book a combined day tour from Bangkok'}
+     ]},
+    {n:5, date:'Jul 20', title:'Chinatown Food Crawl',
+     narrative:"A slower, walkable day centered on Bangkok's most atmospheric neighborhood.",
+     stops:[
+       {time:'3:00 PM', name:'Wat Traimit (Golden Buddha)', category:'temple', note:"World's largest solid gold Buddha statue, 5.5 tons.", cost:'100', travel:'MRT to Wat Mangkon'},
+       {time:'4:30 PM', name:'Talat Noi', category:'chill', note:'Photogenic maze of old shophouses, murals and machine shops, great for pictures.', cost:'0', travel:'Walk from Wat Traimit, ~10 min'},
+       {time:'6:30 PM', name:'Yaowarat street food', category:'chill', note:'Boat noodles, oyster omelets, mango sticky rice as the street lights turn on.', cost:'500', travel:'Walk along Yaowarat Rd'}
+     ]},
+    {n:6, date:'Jul 21', title:'Elephants & Wildlife Day Trip',
+     narrative:'Full day out of the city for ethical animal encounters, the highlight day.',
+     stops:[
+       {time:'9:00 AM', name:'Living Green Elephant Sanctuary', category:'animal', note:'No-riding, no-chains ethical sanctuary, feed, walk with, and bathe rescued elephants.', cost:'1490', travel:'Hotel pickup included, ~1.5 hrs to Chonburi'},
+       {time:'2:00 PM', name:'Khao Kheow Open Zoo', category:'animal', note:'Huge open-range zoo, rent a golf cart, giraffe feeding available.', cost:'350', travel:'Short drive from the sanctuary'}
+     ]},
+    {n:7, date:'Jul 22', title:'Riverside Shopping & Skyline',
+     narrative:'Modern Bangkok along the Chao Phraya, malls, river views, dinner with a view.',
+     stops:[
+       {time:'1:00 PM', name:'ICONSIAM', category:'shop', note:'Riverside mega-mall with an indoor floating-market food hall (SookSiam).', cost:'0', travel:'BTS to Charoen Nakhon or free shuttle boat from Sathorn'},
+       {time:'6:00 PM', name:'Asiatique The Riverfront', category:'shop', note:'Evening night-market complex on the river, Ferris wheel, shopping, dinner.', cost:'0', travel:'Free shuttle boat from Sathorn pier'}
+     ]},
+    {n:8, date:'Jul 23', title:'Parks, Shrines & Central Shopping',
+     narrative:'A relaxed city day mixing green space with central Bangkok shopping streets.',
+     stops:[
+       {time:'7:30 AM', name:'Lumphini Park', category:'nature', note:'Morning walk, look out for the huge monitor lizards.', cost:'0', travel:'MRT to Lumphini or Silom'},
+       {time:'11:00 AM', name:'The Erawan Shrine', category:'temple', note:'Beautiful gilded shrine amid the malls, with traditional dancers.', cost:'0', travel:'BTS to Chit Lom'},
+       {time:'8:00 PM', name:'Rooftop bar', category:'chill', note:'Skyline photos over the city, e.g. Lebua Sky Bar.', cost:'600', travel:'Grab, ~20 min'}
+     ]},
+    {n:9, date:'Jul 24', title:'Ayutthaya Day Trip',
+     narrative:"A UNESCO World Heritage day trip to the ruins of Thailand's ancient capital.",
+     stops:[
+       {time:'9:00 AM', name:'Ayutthaya Historical Park', category:'temple', note:"400+ historic temple ruins, Wat Mahathat's Buddha head in tree roots is the iconic photo.", cost:'1200-1800', travel:'Guided day tour or train from Bang Sue, ~1.5-2 hrs'}
+     ]},
+    {n:10, date:'Jul 25', title:'Green Lung & Local Market',
+     narrative:"Bangkok's quiet, car-free island plus a low-key local floating market (weekends only).",
+     stops:[
+       {time:'9:00 AM', name:'Bang Kachao', category:'nature', note:'Man-made green island, rent bikes and ride the jungle boardwalks.', cost:'150', travel:'Grab + small ferry crossing'},
+       {time:'2:00 PM', name:'Khlong Lat Mayom Floating Market', category:'market', note:'Local, low-tourist floating market. Sat/Sun only, good food, boat rides.', cost:'300', travel:'Grab, ~30-40 min from Bang Kachao'}
+     ]},
+    {n:11, date:'Jul 26', title:'Bargain Shopping & Night Market',
+     narrative:'Bulk shopping day plus one last atmospheric night market.',
+     stops:[
+       {time:'1:00 PM', name:'MBK Center', category:'shop', note:'7 floors, haggling encouraged, good for souvenirs & electronics.', cost:'0', travel:'BTS to National Stadium'},
+       {time:'3:30 PM', name:'Platinum Fashion Mall', category:'shop', note:'Wholesale-style fashion, great prices if you buy multiples.', cost:'0', travel:'BTS to Chit Lom, short walk'},
+       {time:'7:00 PM', name:'Train Night Market Srinagarindra', category:'market', note:'Open Thu–Sun evenings, retro stalls, huge food court, live music.', cost:'400', travel:'Grab, ~35-40 min'}
+     ]},
+    {n:12, date:'Jul 27', title:'Last Full Day',
+     narrative:"Keep it light, final souvenirs, a massage, and an easy last night since you leave at 3:30am.",
+     stops:[
+       {time:'Afternoon', name:'Thai massage', category:'chill', note:'Genuinely worth it after 12 days of walking.', cost:'400', travel:'Nearby your hotel'},
+       {time:'4:00 PM', name:'Wat Benchamabophit revisit', category:'temple', note:'One more golden-hour pass near the hotel, or swap for spa time.', cost:'0', travel:'Walk from hotel'},
+       {time:'Late', name:'Pack & head to the airport', category:'chill', note:"You leave at 3:30am, plan to be at Suvarnabhumi by ~midnight.", cost:'', travel:'Pre-book an airport transfer'}
+     ]}
+  ];
+}
+
+let days = [];
+let activeDay = 0;
+
+const saveItinerary = debounce(()=>saveData('itinerary-days', days), 500);
+
+function renderStops(){
+  const row = document.getElementById('stopsRow');
+  row.innerHTML = days.map((d,i)=>`
+    <button class="daytab ${i===activeDay?'active':''}" onclick="selectDay(${i})">
+      <div class="node"></div>
+      <div class="d">${d.date}</div>
+      <div class="n">D${d.n}</div>
+    </button>
+  `).join('');
+}
+
+function selectDay(i){
+  activeDay = i;
+  renderStops();
+  renderDetail();
+}
+
+function updateDayField(field, value){
+  days[activeDay][field] = value;
+  saveItinerary();
+}
+function updateStopField(stopIdx, field, value){
+  days[activeDay].stops[stopIdx][field] = value;
+  saveItinerary();
+}
+function removeStop(stopIdx){
+  days[activeDay].stops.splice(stopIdx,1);
+  renderDetail();
+  saveItinerary();
+}
+function addStop(){
+  days[activeDay].stops.push({time:'', name:'New activity', category:'other', note:'', cost:'', travel:''});
+  renderDetail();
+  saveItinerary();
+}
+
+function renderDetail(){
+  const d = days[activeDay];
+  const stopsHtml = d.stops.map((s,i)=>{
+    return `
+    <div class="stop-card">
+      <button class="remove-stop" onclick="removeStop(${i})" title="Remove activity">✕</button>
+      <div class="stop-grid">
+        <div><label>Time</label><input class="edit-input" value="${escapeAttr(s.time)}" oninput="updateStopField(${i},'time',this.value)"></div>
+        <div><label>Activity</label><input class="edit-input stop-name-input" value="${escapeAttr(s.name)}" oninput="updateStopField(${i},'name',this.value)"></div>
+        <div><label>Cost (฿ pp)</label><input class="edit-input" value="${escapeAttr(s.cost)}" oninput="updateStopField(${i},'cost',this.value)"></div>
+      </div>
+      <label class="field-label">Notes</label>
+      <textarea class="edit-input stop-note-input" rows="2" oninput="updateStopField(${i},'note',this.value)">${escapeHtml(s.note)}</textarea>
+      <div class="travel-row">
+        <span class="ico">🚗</span>
+        <input class="edit-input" style="flex:1;" placeholder="Getting there, transport, time, cost" value="${escapeAttr(s.travel||'')}" oninput="updateStopField(${i},'travel',this.value)">
+      </div>
+    </div>
+  `;
+  }).join('');
+
+  document.getElementById('detailCard').innerHTML = `
+    <div class="detail-top">
+      <div style="flex:1; min-width:240px;">
+        <div style="font-family:'IBM Plex Mono'; font-size:11px; color:rgba(32,32,28,0.5);">Day ${d.n} of 12 · ${d.date}</div>
+        <input class="edit-input title-input" value="${escapeAttr(d.title)}" oninput="updateDayField('title',this.value)">
+        <textarea class="edit-input narrative-input" rows="2" oninput="updateDayField('narrative',this.value)">${escapeHtml(d.narrative)}</textarea>
+      </div>
+    </div>
+    <div class="stops-list">${stopsHtml}</div>
+    <button class="add-stop-btn" onclick="addStop()">+ Add activity</button>
+    <div class="detail-nav">
+      <button class="nav-btn2" onclick="selectDay(${activeDay-1})" ${activeDay===0?'disabled':''}>&larr; Previous day</button>
+      <button class="nav-btn2" onclick="selectDay(${activeDay+1})" ${activeDay===days.length-1?'disabled':''}>Next day &rarr;</button>
+    </div>
+  `;
+}
+
+/* ================= TODO ================= */
+let todos = [];
+const saveTodos = debounce(()=>saveData('todo-items', todos), 400);
+
+function defaultTodos(){
+  const base = Date.now() - 100000;
+  return [
+    {id:'t1', text:'File the Thailand Digital Arrival Card (TDAC) within 72 hrs of landing', done:false, addedAt: base+1},
+    {id:'t2', text:'Check passport has 6+ months validity', done:false, addedAt: base+2},
+    {id:'t3', text:'Grab an eSIM for data', done:false, addedAt: base+3},
+    {id:'t4', text:'Pack a light rain shell (rainy season)', done:false, addedAt: base+4},
+    {id:'t5', text:'Pack temple-appropriate clothing (shoulders/knees covered)', done:false, addedAt: base+5},
+    {id:'t6', text:'Notify bank/card of travel dates', done:false, addedAt: base+6},
+    {id:'t7', text:'Withdraw or exchange some cash before/on arrival', done:false, addedAt: base+7},
+  ];
+}
+
+let dragSrcIndex = null;
+function renderTodos(){
+  const list = document.getElementById('todoList');
+  if(todos.length===0){
+    list.innerHTML = '<div class="empty-note">Nothing on the list yet, add your first item above.</div>';
+    return;
+  }
+  list.innerHTML = todos.map((t,idx)=>`
+    <div class="todo-item ${t.done?'done':''}" draggable="true" data-idx="${idx}">
+      <span class="todo-drag-handle">⋮⋮</span>
+      <button class="todo-check ${t.done?'done':''}" onclick="toggleTodo('${t.id}')">${t.done?'✓':''}</button>
+      <div class="todo-text">${escapeHtml(t.text)}</div>
+      <button class="todo-del" onclick="deleteTodo('${t.id}')">✕</button>
+    </div>
+  `).join('');
+
+  const items = list.querySelectorAll('.todo-item');
+  items.forEach(el=>{
+    el.addEventListener('dragstart', e=>{
+      dragSrcIndex = parseInt(el.dataset.idx,10);
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', ()=>{
+      el.classList.remove('dragging');
+      items.forEach(i=>i.classList.remove('drag-over'));
+    });
+    el.addEventListener('dragover', e=>{
+      e.preventDefault();
+      el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', ()=>{ el.classList.remove('drag-over'); });
+    el.addEventListener('drop', e=>{
+      e.preventDefault();
+      el.classList.remove('drag-over');
+      const destIdx = parseInt(el.dataset.idx,10);
+      if(dragSrcIndex===null || destIdx===dragSrcIndex) return;
+      const moved = todos.splice(dragSrcIndex,1)[0];
+      todos.splice(destIdx,0,moved);
+      dragSrcIndex = null;
+      renderTodos();
+      saveTodos();
+    });
+  });
+}
+function toggleTodo(id){
+  const t = todos.find(x=>x.id===id);
+  if(t){ t.done = !t.done; renderTodos(); saveTodos(); }
+}
+function deleteTodo(id){
+  todos = todos.filter(x=>x.id!==id);
+  renderTodos(); saveTodos();
+}
+document.getElementById('todoAddBtn').addEventListener('click', addTodo);
+document.getElementById('todoInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addTodo(); });
+function addTodo(){
+  const input = document.getElementById('todoInput');
+  const val = input.value.trim();
+  if(!val) return;
+  todos.push({id:'t'+Date.now(), text:val, done:false, addedAt:Date.now()});
+  input.value = '';
+  renderTodos(); saveTodos();
+}
+
+/* ================= EXPENSES ================= */
+let expenses = [];
+let settlements = [];
+let editingExpenseId = null;
+let oweFieldTouched = false;
+let splitModeChosen = false;
+function updateOweRowVisibility(){
+  document.getElementById('oweInputRow').style.display = splitModeChosen ? '' : 'none';
+}
+const saveExpenses = debounce(()=>saveData('expenses', expenses), 400);
+const saveSettlements = debounce(()=>saveData('settlements', settlements), 400);
+
+function usdValueOf(amt, currency){
+  return currency==='THB' ? (amt/rate) : amt;
+}
+
+function otherPerson(paidBy){ return paidBy==='Z' ? 'E' : 'Z'; }
+
+function onExpPaidByChange(){
+  const paidBy = document.getElementById('expPaidBy').value;
+  document.getElementById('oweInputLabel').textContent = paidBy
+    ? `How much does ${otherPerson(paidBy)} owe?`
+    : 'How much does the other person owe?';
+  onExpAmountChange();
+}
+
+function onOweInputChange(){
+  oweFieldTouched = true;
+  updateSplitModeButtons();
+  onExpAmountChange();
+}
+
+function setSplitMode(mode){
+  splitModeChosen = true;
+  const oweEl = document.getElementById('expOweInput');
+  if(mode === 'equal'){
+    oweFieldTouched = false;
+    onExpAmountChange();
+  } else {
+    oweFieldTouched = true;
+    oweEl.value = '';
+    onExpAmountChange();
+  }
+  updateSplitModeButtons();
+  updateOweRowVisibility();
+}
+
+function updateSplitModeButtons(){
+  document.getElementById('splitEqualBtn').classList.toggle('on', !oweFieldTouched);
+  document.getElementById('splitCustomBtn').classList.toggle('on', oweFieldTouched);
+}
+
+function onExpAmountChange(){
+  const desc = document.getElementById('expDesc').value.trim();
+  const amt = evalMathExpr(document.getElementById('expAmt').value) || 0;
+  const tip = evalMathExpr(document.getElementById('expTip').value) || 0;
+  const total = amt + tip;
+  const currency = document.getElementById('expCurrency').value;
+  const paidBy = document.getElementById('expPaidBy').value;
+  const other = paidBy ? otherPerson(paidBy) : 'the other person';
+  const oweEl = document.getElementById('expOweInput');
+  const saveBtn = document.getElementById('expAddBtn');
+  const calc = document.getElementById('calcCheck');
+  const symbol = currency==='THB' ? '฿' : '$';
+
+  updateSumDisplay('expAmtSum', document.getElementById('expAmt').value, symbol);
+  updateSumDisplay('expTipSum', document.getElementById('expTip').value, symbol);
+
+  if(!oweFieldTouched){
+    oweEl.value = total>0 ? (total/2).toFixed(2) : '';
+  }
+  const owe = evalMathExpr(oweEl.value) || 0;
+  updateSumDisplay('expOweSum', oweEl.value, symbol);
+  const payerShare = total - owe;
+
+  const oweValid = total>0 && owe>=0 && owe<=total;
+  const editNoteOk = !editingExpenseId || document.getElementById('expEditNote').value.trim() !== '';
+  const ok = !!desc && !!currency && !!paidBy && amt>0 && oweValid && editNoteOk;
+  saveBtn.disabled = !ok;
+
+  if(!currency || !paidBy){
+    calc.className = 'calc-check bad';
+    calc.innerHTML = `<span>Fill in currency and paid-by to see the balance.</span>`;
+    return;
+  }
+  calc.className = 'calc-check ' + (oweValid ? 'ok' : 'bad');
+  calc.innerHTML = `
+    <div class="row"><span>${other} owes (incl. tip)</span><span>${symbol}${owe.toFixed(2)}</span></div>
+    <div class="row"><span>${paidBy}'s own share (incl. tip)</span><span>${symbol}${payerShare.toFixed(2)}</span></div>
+    ${!oweValid ? `<div class="tip-note">The amount ${other} owes must be between 0 and the total (incl. tip).</div>` : ''}
+  `;
+}
+
+function resetExpenseForm(){
+  editingExpenseId = null;
+  oweFieldTouched = false;
+  document.getElementById('expFormHeading').textContent = 'Add expense';
+  document.getElementById('expAddBtn').textContent = 'Add expense';
+  document.getElementById('expCancelBtn').style.display = 'none';
+  document.getElementById('expDesc').value = '';
+  document.getElementById('expAmt').value = '';
+  document.getElementById('expTip').value = '';
+  document.getElementById('expCurrency').value = '';
+  document.getElementById('expPaidBy').value = '';
+  document.getElementById('expOweInput').value = '';
+  document.getElementById('expEditNote').value = '';
+  document.getElementById('expEditNoteRow').style.display = 'none';
+  document.getElementById('oweInputLabel').textContent = 'How much does the other person owe?';
+  updateSplitModeButtons();
+  splitModeChosen = false;
+updateOweRowVisibility();
+  onExpAmountChange();
+}
+function cancelExpenseEdit(){ resetExpenseForm(); }
+
+function saveExpense(){
+  const desc = document.getElementById('expDesc').value.trim();
+const amt = evalMathExpr(document.getElementById('expAmt').value);
+  const currency = document.getElementById('expCurrency').value;
+  const tip = evalMathExpr(document.getElementById('expTip').value) || 0;
+  const paidBy = document.getElementById('expPaidBy').value;
+  const owe = evalMathExpr(document.getElementById('expOweInput').value);
+  const editNote = document.getElementById('expEditNote').value.trim();
+if(!desc || !currency || !paidBy || isNaN(amt) || amt<=0) return;
+const total = amt + tip;
+  if(isNaN(owe) || owe<0 || owe>total) return;
+  if(editingExpenseId && !editNote) return; // a change note is required to save an edit
+
+  const now = Date.now();
+  const existing = editingExpenseId ? expenses.find(x=>x.id===editingExpenseId) : null;
+  const record = {
+    id: editingExpenseId || ('e'+now),
+desc, amount:amt, currency, tip, category:'Other', paidBy,
+    oweAmount: owe,
+    date: existing ? (existing.date || now) : now,
+    updatedAt: now,
+    changeNotes: existing ? (existing.changeNotes || []).concat([{note:editNote, at:now}]) : []
+  };
+
+  if(editingExpenseId){
+    const idx = expenses.findIndex(x=>x.id===editingExpenseId);
+    if(idx>=0) expenses[idx] = record;
+  } else {
+    expenses.push(record);
+  }
+  resetExpenseForm();
+  renderExpenses();
+  saveExpenses();
+}
+
+function editExpense(id){
+  const e = expenses.find(x=>x.id===id);
+  if(!e) return;
+  editingExpenseId = id;
+  oweFieldTouched = true;
+  updateSplitModeButtons();
+  splitModeChosen = true;
+updateOweRowVisibility();
+  document.getElementById('expFormHeading').textContent = 'Edit expense';
+  document.getElementById('expAddBtn').textContent = 'Save changes';
+  document.getElementById('expCancelBtn').style.display = '';
+  document.getElementById('expDesc').value = e.desc;
+  document.getElementById('expAmt').value = e.amount;
+  document.getElementById('expCurrency').value = e.currency;
+  document.getElementById('expTip').value = e.tip || '';
+  document.getElementById('expPaidBy').value = e.paidBy;
+  document.getElementById('expOweInput').value = (e.oweAmount!==undefined) ? e.oweAmount : (e.splitZ!==undefined ? (e.paidBy==='Z'?e.splitE:e.splitZ) : e.amount/2);
+  document.getElementById('oweInputLabel').textContent = `How much does ${otherPerson(e.paidBy)} owe?`;
+  document.getElementById('expEditNote').value = '';
+  document.getElementById('expEditNoteRow').style.display = '';
+  onExpAmountChange();
+  document.getElementById('expFormHeading').scrollIntoView({behavior:'smooth', block:'center'});
+  document.getElementById('expEditNote').focus();
+}
+
+let pendingDeleteId = null;
+function deleteExpense(id){
+  pendingDeleteId = id;
+  document.getElementById('deleteConfirmModal').classList.add('show');
+}
+function closeDeleteConfirm(){
+  pendingDeleteId = null;
+  document.getElementById('deleteConfirmModal').classList.remove('show');
+}
+function confirmDeleteExpense(){
+  if(!pendingDeleteId) return;
+  const id = pendingDeleteId;
+  expenses = expenses.filter(x=>x.id!==id);
+  if(editingExpenseId === id) resetExpenseForm();
+  renderExpenses(); saveExpenses();
+  closeDeleteConfirm();
+}
+
+function formatWhen(e){
+  const created = e.date ? new Date(e.date) : null;
+  const updated = e.updatedAt ? new Date(e.updatedAt) : null;
+  const fmt = (d)=> d.toLocaleDateString(undefined,{month:'short',day:'numeric'}) + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  if(!created) return '';
+  const lastNote = (e.changeNotes && e.changeNotes.length) ? e.changeNotes[e.changeNotes.length-1].note : '';
+  const noteHtml = lastNote ? `<div style="font-style:italic; opacity:0.8; margin-top:2px;">"${escapeHtml(lastNote)}"</div>` : '';
+  if(updated && e.updatedAt !== e.date){
+    return `Added ${fmt(created)}<br>Changed ${fmt(updated)}${noteHtml}`;
+  }
+  return `Added ${fmt(created)}`;
+}
+
+function renderExpenses(){
+  const search = (document.getElementById('expSearch').value || '').toLowerCase();
+  const body = document.getElementById('expTableBody');
+  const sorted = expenses.slice().sort((a,b)=>a.date-b.date);
+  const filtered = search ? sorted.filter(e=>e.desc.toLowerCase().includes(search)) : sorted;
+  if(filtered.length===0){
+    body.innerHTML = '<tr><td colspan="7" class="empty-note">No expenses found.</td></tr>';
+  } else {
+    body.innerHTML = filtered.map(e=>{
+      const symbol = e.currency==='USD'?'$':'฿';
+      const owe = e.oweAmount !== undefined ? e.oweAmount : e.amount/2;
+      const other = otherPerson(e.paidBy);
+      return `
+      <tr>
+<td>${escapeHtml(e.desc)}</td>
+        <td>${e.paidBy}</td>
+        <td><span class="split-tag">${other} owes ${symbol}${owe.toFixed(2)}</span></td>
+<td class="mono">${symbol}${(Number(e.amount)+Number(e.tip||0)).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+        <td class="when-tag">${formatWhen(e)}</td>
+        <td>
+          <div class="row-actions">
+            <button class="edit-btn" onclick="editExpense('${e.id}')" title="Edit">✎</button>
+            <button class="del-btn" onclick="deleteExpense('${e.id}')" title="Delete">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;}).join('');
+  }
+
+  renderExpenseDashboard();
+}
+
+function renderTotals(){
+  const totals = {};
+  EXP_CATEGORIES.forEach(c=>totals[c]=0);
+  expenses.forEach(e=>{
+    totals[e.category] = (totals[e.category]||0) + usdValueOf(Number(e.amount), e.currency);
+  });
+  const grid = document.getElementById('totalsGrid');
+  grid.innerHTML = EXP_CATEGORIES.map(c=>`
+    <div class="total-box"><div class="lbl">${c}</div><div class="val">$${totals[c].toFixed(2)}</div></div>
+  `).join('');
+}
+
+// Net USD owed: positive = E owes Z, negative = Z owes E
+function calcNetFromExpenses(){
+  let net = 0;
+  expenses.forEach(e=>{
+    const total = Number(e.amount) + (Number(e.tip)||0);
+    const oweUsd = usdValueOf(Number(e.oweAmount !== undefined ? e.oweAmount : total/2), e.currency);
+    if(e.paidBy === 'Z'){
+      net += oweUsd;
+    } else {
+      net -= oweUsd;
+    }
+  });
+  return net;
+}
+function calcSettlementsNet(){
+  // stored the same sign convention: positive reduces "E owes Z"
+  return settlements.reduce((sum,s)=>sum + (s.amountUsd||0), 0);
+}
+function currentBalanceUsd(){
+  return calcNetFromExpenses() - calcSettlementsNet();
+}
+
+function renderExpenseDashboard(){
+  let totalUsd = 0;
+  expenses.forEach(e=>{
+    totalUsd += usdValueOf(Number(e.amount), e.currency) + usdValueOf(Number(e.tip)||0, e.currency);
+  });
+  document.getElementById('dashTotalUsd').textContent = '$' + totalUsd.toFixed(2);
+  document.getElementById('dashTotalThb').textContent = '฿' + (totalUsd*rate).toLocaleString(undefined,{maximumFractionDigits:0});
+
+  const bal = currentBalanceUsd();
+  const card = document.getElementById('dashBalanceCard');
+  const line = document.getElementById('dashBalanceLine');
+  const sub = document.getElementById('dashBalanceSub');
+  if(Math.abs(bal) < 0.01){
+    card.className = 'dash-card settled';
+    line.textContent = 'Settled up 🎉';
+    sub.textContent = 'No one owes anyone right now.';
+  } else {
+    card.className = 'dash-card balance';
+    const debtor = bal > 0 ? 'E' : 'Z';
+    const creditor = bal > 0 ? 'Z' : 'E';
+    const absUsd = Math.abs(bal);
+    line.textContent = `${debtor} owes ${creditor} $${absUsd.toFixed(2)}`;
+    sub.textContent = `≈ ฿${(absUsd*rate).toLocaleString(undefined,{maximumFractionDigits:0})}`;
+  }
+}
+
+/* ---- settle up modal ---- */
+function openSettleModal(){
+  const bal = currentBalanceUsd();
+  document.getElementById('settleAmtUsd').value = Math.abs(bal).toFixed(2);
+  const debtor = bal > 0 ? 'E' : 'Z';
+  const creditor = bal > 0 ? 'Z' : 'E';
+  document.getElementById('settleModalDesc').textContent = Math.abs(bal) < 0.01
+    ? "You're already settled up, recording a settlement will just log it."
+    : `Recording that ${debtor} paid ${creditor} back.`;
+  document.getElementById('settleModal').classList.add('show');
+}
+function closeSettleModal(){ document.getElementById('settleModal').classList.remove('show'); }
+function confirmSettle(){
+  const bal = currentBalanceUsd();
+  const amt = parseFloat(document.getElementById('settleAmtUsd').value);
+  if(isNaN(amt) || amt < 0) return;
+  const note = document.getElementById('settleNote').value.trim();
+  const debtor = bal >= 0 ? 'E' : 'Z';
+  const creditor = bal >= 0 ? 'Z' : 'E';
+  // reduces "E owes Z" if debtor is E (positive bal), increases it (i.e. subtracts negative) if debtor is Z
+  const signedUsd = bal >= 0 ? amt : -amt;
+  settlements.push({
+    id:'s'+Date.now(), date:Date.now(), amountUsd:signedUsd,
+    from:debtor, to:creditor, note
+  });
+  saveSettlements();
+  renderSettlements();
+  renderExpenseDashboard();
+  document.getElementById('settleNote').value = '';
+  closeSettleModal();
+}
+document.getElementById('settleUpBtn').addEventListener('click', openSettleModal);
+
+function renderSettlements(){
+  const list = document.getElementById('settlementList');
+  if(settlements.length===0){
+    list.innerHTML = '<div class="empty-note">No settlements recorded yet.</div>';
+    return;
+  }
+  const sorted = settlements.slice().sort((a,b)=>b.date-a.date);
+  list.innerHTML = sorted.map(s=>`
+    <div class="settlement-row">
+      <span>${s.from} paid ${s.to}${s.note ? ' — '+escapeHtml(s.note) : ''} <span style="opacity:0.5;">(${new Date(s.date).toLocaleDateString()})</span></span>
+      <span class="amt">$${Math.abs(s.amountUsd).toFixed(2)}</span>
+    </div>
+  `).join('');
+}
+
+/* ================= EMERGENCY NUMBERS ================= */
+let emergencyNumbers = [];
+const saveEmergency = debounce(()=>saveData('emergency-numbers', emergencyNumbers), 400);
+function defaultEmergencyNumbers(){
+  return [
+    {id:'em1', label:'Tourist Police (English-speaking)', number:'1155', locked:true},
+    {id:'em2', label:'Medical emergency / ambulance', number:'1669', locked:true},
+    {id:'em3', label:'Police', number:'191', locked:true},
+    {id:'em4', label:'Fire', number:'199', locked:true}
+  ];
+}
+function renderEmergency(){
+  document.getElementById('emergencyList').innerHTML = emergencyNumbers.map(e=>`
+    <div class="emergency-row">
+      <span>${escapeHtml(e.label)}</span>
+      <span style="display:flex; align-items:center; gap:12px;">
+        <span class="num">${escapeHtml(e.number)}</span>
+        ${e.locked ? '' : `<button class="todo-del" onclick="deleteEmergency('${e.id}')">✕</button>`}
+      </span>
+    </div>
+  `).join('');
+}
+function deleteEmergency(id){
+  emergencyNumbers = emergencyNumbers.filter(x=>x.id!==id);
+  renderEmergency(); saveEmergency();
+}
+document.getElementById('emgAddBtn').addEventListener('click', ()=>{
+  const label = document.getElementById('emgLabelInput').value.trim();
+  const number = document.getElementById('emgNumberInput').value.trim();
+  if(!label || !number) return;
+  emergencyNumbers.push({id:'em'+Date.now(), label, number});
+  document.getElementById('emgLabelInput').value='';
+  document.getElementById('emgNumberInput').value='';
+  renderEmergency(); saveEmergency();
+});
+
+/* ================= HOTEL NOTES ================= */
+let hotelNotes = [];
+const saveHotelNotes = debounce(()=>saveData('hotel-notes', hotelNotes), 400);
+function renderHotelNotes(){
+  const el = document.getElementById('hotelNotesList');
+  if(!hotelNotes.length){
+    el.innerHTML = '<div class="empty-note">No notes yet, add one below.</div>';
+    return;
+  }
+  el.innerHTML = hotelNotes.map(n=>`
+    <div class="note-item">
+      <div class="txt">${escapeHtml(n.text)}</div>
+      <button class="kv-del" onclick="deleteHotelNote('${n.id}')">✕</button>
+    </div>
+  `).join('');
+}
+function deleteHotelNote(id){
+  hotelNotes = hotelNotes.filter(x=>x.id!==id);
+  renderHotelNotes(); saveHotelNotes();
+}
+document.getElementById('hotelNoteAddBtn').addEventListener('click', ()=>{
+  const input = document.getElementById('hotelNoteInput');
+  const val = input.value.trim();
+  if(!val) return;
+  hotelNotes.push({id:'hn'+Date.now(), text:val});
+  input.value = '';
+  renderHotelNotes(); saveHotelNotes();
+});
+
+/* ================= GENERIC KEY/VALUE LISTS (My flight / Friend's flight / Good to know) ================= */
+const kvLists = {};
+const kvSaveDebouncers = {};
+function debounceSaveKV(key){
+  if(!kvSaveDebouncers[key]) kvSaveDebouncers[key] = debounce(()=>saveData(key, kvLists[key].items), 400);
+  kvSaveDebouncers[key]();
+}
+function renderKVList(key){
+  const cfg = kvLists[key];
+  const el = document.getElementById(cfg.elId);
+  if(!cfg.items.length){
+    el.innerHTML = '<div class="empty-note">Nothing added yet, add your first entry below.</div>';
+    return;
+  }
+  el.innerHTML = cfg.items.map(it=>`
+    <div class="kv-row">
+      <span class="kv-label">${escapeHtml(it.label)}</span>
+      <span class="kv-value">${escapeHtml(it.value)}</span>
+      <button class="kv-del" onclick="removeKVItem('${key}','${it.id}')">✕</button>
+    </div>
+  `).join('');
+}
+function addKVItem(key, label, value){
+  kvLists[key].items.push({id:'kv'+Date.now()+Math.random().toString(36).slice(2,6), label, value});
+  renderKVList(key);
+  debounceSaveKV(key);
+}
+function removeKVItem(key, id){
+  kvLists[key].items = kvLists[key].items.filter(x=>x.id!==id);
+  renderKVList(key);
+  debounceSaveKV(key);
+}
+
+document.getElementById('myFlightAddBtn').addEventListener('click', ()=>{
+  const l = document.getElementById('myFlightLabelInput').value.trim();
+  const v = document.getElementById('myFlightValueInput').value.trim();
+  if(!l || !v) return;
+  addKVItem('my-flight-info', l, v);
+  document.getElementById('myFlightLabelInput').value='';
+  document.getElementById('myFlightValueInput').value='';
+});
+document.getElementById('friendFlightAddBtn').addEventListener('click', ()=>{
+  const l = document.getElementById('friendFlightLabelInput').value.trim();
+  const v = document.getElementById('friendFlightValueInput').value.trim();
+  if(!l || !v) return;
+  addKVItem('friend-flight-info', l, v);
+  document.getElementById('friendFlightLabelInput').value='';
+  document.getElementById('friendFlightValueInput').value='';
+});
+document.getElementById('gtkAddBtn').addEventListener('click', ()=>{
+  const l = document.getElementById('gtkLabelInput').value.trim();
+  const v = document.getElementById('gtkValueInput').value.trim();
+  if(!l || !v) return;
+  addKVItem('good-to-know', l, v);
+  document.getElementById('gtkLabelInput').value='';
+  document.getElementById('gtkValueInput').value='';
+});
+
+/* ================= THAI PHRASES ================= */
+let phraseCategories = [];
+const savePhrases = debounce(()=>saveData('thai-phrases', phraseCategories), 500);
+
+function defaultPhraseCategories(){
+  return [
+    {id:'greetings', name:'Greetings', custom:false, phrases:[
+      {id:'p1', english:'Hello', thai:'สวัสดี', pronunciation:'sa-wat-dee'},
+      {id:'p2', english:'Thank you', thai:'ขอบคุณ', pronunciation:'khop-khun'},
+      {id:'p3', english:'Goodbye', thai:'ลาก่อน', pronunciation:'laa gon'},
+      {id:'p4', english:"Yes (said by a man)", thai:'ครับ', pronunciation:'khrap'},
+      {id:'p5', english:"Yes (said by a woman)", thai:'ค่ะ', pronunciation:'ka'}
+    ]},
+    {id:'basics', name:'Basic needs', custom:false, phrases:[
+      {id:'p6', english:'Where is the bathroom?', thai:'ห้องน้ำอยู่ไหน', pronunciation:'hong nam yoo nai'},
+      {id:'p7', english:'How much is this?', thai:'นี่เท่าไหร่', pronunciation:'nee tao rai'},
+      {id:'p8', english:"I don't understand", thai:'ไม่เข้าใจ', pronunciation:'mai khao jai'},
+      {id:'p9', english:'Do you speak English?', thai:'พูดภาษาอังกฤษได้ไหม', pronunciation:'poot pasaa ang-grit dai mai'}
+    ]},
+    {id:'directions', name:'Directions', custom:false, phrases:[
+      {id:'p10', english:'Left', thai:'ซ้าย', pronunciation:'saai'},
+      {id:'p11', english:'Right', thai:'ขวา', pronunciation:'kwaa'},
+      {id:'p12', english:'Straight ahead', thai:'ตรงไป', pronunciation:'trong pai'},
+      {id:'p13', english:'Stop here, please', thai:'จอดตรงนี้', pronunciation:'jot trong nee'}
+    ]},
+    {id:'food', name:'Food & dining', custom:false, phrases:[
+      {id:'p14', english:'Delicious', thai:'อร่อย', pronunciation:'a-roi'},
+      {id:'p15', english:'Not spicy, please', thai:'ไม่เผ็ด', pronunciation:'mai pet'},
+      {id:'p16', english:'The check, please', thai:'เช็คบิลด้วย', pronunciation:'chek bin duay'},
+      {id:'p17', english:'No meat, please', thai:'ไม่ใส่เนื้อสัตว์', pronunciation:'mai sai neua sat'}
+    ]},
+    {id:'numbers', name:'Numbers', custom:false, phrases:[
+      {id:'p18', english:'One', thai:'หนึ่ง', pronunciation:'neung'},
+      {id:'p19', english:'Two', thai:'สอง', pronunciation:'song'},
+      {id:'p20', english:'Three', thai:'สาม', pronunciation:'saam'},
+      {id:'p21', english:'Ten', thai:'สิบ', pronunciation:'sip'}
+    ]},
+    {id:'emergency', name:'Emergency', custom:false, phrases:[
+      {id:'p22', english:'Help!', thai:'ช่วยด้วย', pronunciation:'chuay duay'},
+      {id:'p23', english:'I need a doctor', thai:'ฉันต้องการหมอ', pronunciation:'chan tong-gaan mor'},
+      {id:'p24', english:'Please call the police', thai:'โทรเรียกตำรวจ', pronunciation:'toh riak tam-ruat'}
+    ]},
+    {id:'custom', name:'EXTRA', custom:true, phrases:[]}
+  ];
+}
+
+function renderPhrases(){
+  const wrap = document.getElementById('phrasesWrap');
+  wrap.innerHTML = phraseCategories.map(cat=>`
+    <div class="panel">
+      <h3>${escapeHtml(cat.custom ? 'EXTRA' : cat.name)}</h3>
+      ${cat.phrases.length===0
+        ? '<div class="empty-note">No phrases here yet, add one below.</div>'
+        : cat.phrases.map(p=>`
+          <div class="phrase-item">
+            <div>
+              <div class="phrase-en">${escapeHtml(p.english)}</div>
+              <div class="phrase-th">${escapeHtml(p.thai)}<span class="phrase-pr">${escapeHtml(p.pronunciation)}</span></div>
+            </div>
+            <button class="kv-del" onclick="removePhrase('${cat.id}','${p.id}')">✕</button>
+          </div>
+        `).join('')
+      }
+      <div class="phrase-add-form">
+        <input type="text" id="ph-en-${cat.id}" placeholder="English">
+        <input type="text" id="ph-th-${cat.id}" placeholder="Thai script (optional)">
+        <input type="text" id="ph-pr-${cat.id}" placeholder="Pronunciation">
+        <button onclick="addPhrase('${cat.id}')">Add</button>
+      </div>
+    </div>
+  `).join('');
+}
+function addPhrase(catId){
+  const en = document.getElementById('ph-en-'+catId).value.trim();
+  const th = document.getElementById('ph-th-'+catId).value.trim();
+  const pr = document.getElementById('ph-pr-'+catId).value.trim();
+  if(!en || !pr) return;
+  const cat = phraseCategories.find(c=>c.id===catId);
+  cat.phrases.push({id:'ph'+Date.now(), english:en, thai:th, pronunciation:pr});
+  renderPhrases(); savePhrases();
+}
+function removePhrase(catId, phId){
+  const cat = phraseCategories.find(c=>c.id===catId);
+  cat.phrases = cat.phrases.filter(p=>p.id!==phId);
+  renderPhrases(); savePhrases();
+}
+
+/* ================= THAI MEDIA ================= */
+let mediaItems = [];
+const MEDIA_TYPES = ['Song','Movie','TV Show','TikTok','Other'];
+const MEDIA_SECTION_LABELS = {Song:'Songs', Movie:'Movies', 'TV Show':'TV Shows', TikTok:'TikToks', Other:'Other'};
+const MEDIA_COLORS = {Song:'#c07f22', Movie:'#a33b3b', 'TV Show':'#293a5c', TikTok:'#6b3fa0', Other:'#6b6b62'};
+const saveMedia = debounce(()=>saveData('thai-media', mediaItems), 400);
+
+function renderMedia(){
+  const list = document.getElementById('mediaList');
+  if(mediaItems.length===0){
+    list.innerHTML = '<div class="empty-note">Nothing added yet, add a song, movie, show, or TikTok above.</div>';
+    return;
+  }
+  let html = '';
+  MEDIA_TYPES.forEach(type=>{
+    const items = mediaItems.filter(m=>m.type===type);
+    if(!items.length) return;
+    html += `<div class="media-section-head" style="color:${MEDIA_COLORS[type]||'var(--indigo)'};">${MEDIA_SECTION_LABELS[type]}</div>`;
+    html += items.map(m=>`
+      <div class="kv-row">
+        <span class="kv-value">${escapeHtml(m.title)}</span>
+        ${m.link ? `<a href="${escapeAttr(m.link)}" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono'; font-size:12px; color:var(--jade); flex:0 0 auto;">Open ↗</a>` : ''}
+        <button class="kv-del" onclick="removeMedia('${m.id}')">✕</button>
+      </div>
+    `).join('');
+  });
+  list.innerHTML = html;
+}
+function removeMedia(id){
+  mediaItems = mediaItems.filter(x=>x.id!==id);
+  renderMedia(); saveMedia();
+}
+document.getElementById('mediaAddBtn').addEventListener('click', ()=>{
+  const type = document.getElementById('mediaType').value;
+  const title = document.getElementById('mediaTitle').value.trim();
+  const link = document.getElementById('mediaLink').value.trim();
+  if(!type || !title) return;
+  mediaItems.push({id:'md'+Date.now(), type, title, link});
+  document.getElementById('mediaType').value='';
+  document.getElementById('mediaTitle').value='';
+  document.getElementById('mediaLink').value='';
+  renderMedia(); saveMedia();
+});
+
+/* ================= INIT ================= */
+async function init(){
+  const [
+    loadedDays, loadedTodos, loadedExpenses, loadedRate, loadedEmergency,
+    loadedMyFlight, loadedFriendFlight, loadedGoodToKnow, loadedPhrases, loadedMedia,
+    loadedSettlements, loadedHotelNotes
+  ] = await Promise.all([
+    loadData('itinerary-days', null),
+    loadData('todo-items', null),
+    loadData('expenses', null),
+    loadData('currency-rate', null),
+    loadData('emergency-numbers', null),
+    loadData('my-flight-info', null),
+    loadData('friend-flight-info', null),
+    loadData('good-to-know', null),
+    loadData('thai-phrases', null),
+    loadData('thai-media', null),
+    loadData('settlements', null),
+    loadData('hotel-notes', null)
+  ]);
+
+  days = loadedDays || defaultDays();
+  todos = loadedTodos || defaultTodos();
+  expenses = loadedExpenses || [];
+  settlements = loadedSettlements || [];
+  rate = loadedRate || 33.2;
+  // The first 4 emergency numbers are permanent (locked) — always keep them,
+  // even if saved data is missing them, and layer any custom entries on top.
+  const permanentEmergency = defaultEmergencyNumbers();
+  emergencyNumbers = loadedEmergency
+    ? permanentEmergency.concat(loadedEmergency.filter(e=>!e.locked))
+    : permanentEmergency;
+  phraseCategories = loadedPhrases || defaultPhraseCategories();
+  
+  mediaItems = loadedMedia || [];
+  hotelNotes = loadedHotelNotes || [];
+
+  kvLists['my-flight-info'] = {items: loadedMyFlight || [], elId:'myFlightList'};
+  kvLists['friend-flight-info'] = {items: loadedFriendFlight || [], elId:'friendFlightList'};
+  kvLists['good-to-know'] = {items: loadedGoodToKnow || [], elId:'goodToKnowList'};
+
+  document.getElementById('rateDisplay').textContent = rate;
+  homeConverter = createConverter({leftInputId:'homeConvLeft', rightInputId:'homeConvRight', leftLabelId:'homeConvLeftLabel', rightLabelId:'homeConvRightLabel', swapBtnId:'homeConvSwap'});
+  expConverter = createConverter({leftInputId:'expConvLeft', rightInputId:'expConvRight', leftLabelId:'expConvLeftLabel', rightLabelId:'expConvRightLabel', swapBtnId:'expConvSwap'});
+
+  renderStops();
+  renderDetail();
+  renderTodos();
+  loadWeather();
+  onExpPaidByChange();
+  updateSplitModeButtons();
+  updateOweRowVisibility();
+  renderExpenses();
+  renderSettlements();
+  renderEmergency();
+  renderPhrases();
+  renderMedia();
+  renderHotelNotes();
+  renderKVList('my-flight-info');
+  renderKVList('friend-flight-info');
+  renderKVList('good-to-know');
+  renderClocks();
+
+  const lastPage = localGet('lastPage');
+  showPage(lastPage && pages.includes(lastPage) ? lastPage : 'home', true);
+  renderCountdown();
+
+
+  // if these were first-time defaults, persist them so both people start from the same data
+  if(!loadedDays) saveData('itinerary-days', days);
+  if(!loadedTodos) saveData('todo-items', todos);
+  if(!loadedEmergency) saveData('emergency-numbers', emergencyNumbers);
+  if(!loadedPhrases) saveData('thai-phrases', phraseCategories);
+
+  // live sync: pick up changes the other person makes without needing a refresh
+  listenData('itinerary-days', (val)=>{ days = val; if(activeDay >= days.length) activeDay = 0; renderStops(); renderDetail(); });
+  listenData('todo-items', (val)=>{ todos = val; renderTodos(); });
+  listenData('expenses', (val)=>{ expenses = val; renderExpenses(); });
+  listenData('settlements', (val)=>{ settlements = val; renderSettlements(); renderExpenseDashboard(); });
+  listenData('emergency-numbers', (val)=>{ emergencyNumbers = permanentEmergency.concat((val||[]).filter(e=>!e.locked)); renderEmergency(); });
+  listenData('hotel-notes', (val)=>{ hotelNotes = val; renderHotelNotes(); });
+  listenData('currency-rate', (val)=>{ rate = val; document.getElementById('rateDisplay').textContent = rate; if(homeConverter) homeConverter.refresh(); if(expConverter) expConverter.refresh(); renderExpenseDashboard(); renderTotals(); });
+  listenData('my-flight-info', (val)=>{ kvLists['my-flight-info'].items = val; renderKVList('my-flight-info'); });
+  listenData('friend-flight-info', (val)=>{ kvLists['friend-flight-info'].items = val; renderKVList('friend-flight-info'); });
+  listenData('good-to-know', (val)=>{ kvLists['good-to-know'].items = val; renderKVList('good-to-know'); });
+  listenData('thai-phrases', (val)=>{ phraseCategories = val; renderPhrases(); });
+  listenData('thai-media', (val)=>{ mediaItems = val; renderMedia(); });
+}
+init();
+</script>
+</body>
+</html>
